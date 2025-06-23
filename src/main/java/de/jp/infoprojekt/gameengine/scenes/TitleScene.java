@@ -1,14 +1,12 @@
-package de.jp.infoprojekt.scenes;
+package de.jp.infoprojekt.gameengine.scenes;
 
-import de.jp.infoprojekt.util.ImageManager;
+import de.jp.infoprojekt.util.ResourceManager;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.io.IOException;
 
-public class TitleScene extends Scene {
+public class TitleScene extends AbstractScene {
 
     public JButton exitButton = new JButton("Exit");
 
@@ -36,7 +34,7 @@ public class TitleScene extends Scene {
 
         exitButton.setBounds(getWidth() / 2 - 100, getHeight() - 150, 200, 50);
 
-        g.drawImage(ImageManager.TITLE_SCENE_BACKGROUND, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(ResourceManager.TITLE_SCENE_BACKGROUND, 0, 0, getWidth(), getHeight(), null);
 
 
         //g.setColor(Color.RED);

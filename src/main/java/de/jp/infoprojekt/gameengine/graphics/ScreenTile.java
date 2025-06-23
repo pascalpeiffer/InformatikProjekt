@@ -1,21 +1,22 @@
-package de.jp.infoprojekt.ui;
+package de.jp.infoprojekt.gameengine.graphics;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Objects;
 
 public class ScreenTile extends JPanel {
 
     public ScreenTile() {
-
+        setLayout(null);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         try {
-            g.drawImage(new ImageIcon(ImageIO.read(getClass().getResource("/test.jpg"))).getImage(), 0, 0, getWidth(), getHeight(), null);
+            g.drawImage(new ImageIcon(ImageIO.read(Objects.requireNonNull(getClass().getResource("/test.jpg")))).getImage(), 0, 0, getWidth(), getHeight(), null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
