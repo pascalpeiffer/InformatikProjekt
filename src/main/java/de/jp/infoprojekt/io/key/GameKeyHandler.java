@@ -5,10 +5,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * GameKeyHandler class
@@ -26,29 +27,29 @@ public class GameKeyHandler {
         this.gameEngine = gameEngine;
 
         gameEngine.getGraphics().getFrame().addKeyListener(new GameKeyHandlerImpl());
+
+        gameEngine.getGraphics().getFrame().addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {}
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                keysDown.clear();
+            }
+        });
     }
 
     public boolean isKeyDown(int keyCode) {
         return keysDown.contains(keyCode);
     }
 
-    public void onKeyDown(int keyCode, Runnable runnable) {
-        keysDown.addListener((ListChangeListener<? super Integer>) c -> {
-            if (keysDown.contains(keyCode)) {
-                runnable.run();
-            }
-        });
-    }
-
     private class GameKeyHandlerImpl implements KeyListener {
         @Override
         public void keyTyped(KeyEvent e) {
-            System.out.println("Typed");
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            System.out.println("Pressed");
             if (!keysDown.contains(e.getKeyCode())) {
                 keysDown.add(e.getKeyCode());
             }
@@ -56,7 +57,6 @@ public class GameKeyHandler {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            System.out.println("Released");
             keysDown.remove((Object) e.getKeyCode());
         }
     }

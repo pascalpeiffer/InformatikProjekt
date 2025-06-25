@@ -3,6 +3,7 @@ package de.jp.infoprojekt;
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.settings.SettingManager;
 import de.jp.infoprojekt.resources.ResourceManager;
+import de.jp.infoprojekt.util.FontManager;
 
 import java.awt.*;
 import java.io.IOException;
@@ -18,6 +19,12 @@ public class GameMain {
             //Running on non-gui systems
             System.err.println("This Game is not supported on NON-UI platforms!");
             System.exit(-1);
+        }
+
+        try {
+            FontManager.registerFonts();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         //Load Settings

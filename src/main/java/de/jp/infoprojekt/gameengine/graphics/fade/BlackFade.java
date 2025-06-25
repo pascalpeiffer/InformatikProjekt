@@ -26,6 +26,7 @@ public class BlackFade extends AbstractFade {
         setOpaque(false);
 
         //Disable inputs
+        //TODO disable via key / mouse manager
         addMouseListener(new MouseAdapter() {});
         addMouseMotionListener(new MouseMotionAdapter() {});
         //setFocusTraversalKeysEnabled(false);

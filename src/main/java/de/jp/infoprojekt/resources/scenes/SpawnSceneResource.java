@@ -10,8 +10,10 @@ import de.jp.infoprojekt.resources.GameResource;
  */
 public class SpawnSceneResource {
 
-    public static GameResource SPAWN_BACKGROUND = new GameResource("/scenes/spawn/SpawnSceneBackground.png");
-    public static GameResource SPAWN_BACKGROUND_DOOR_HALF = new GameResource("/scenes/spawn/SpawnSceneBackground-DoorHalf.png");
-    public static GameResource SPAWN_BACKGROUND_AGENTS = new GameResource("/scenes/spawn/SpawnSceneBackground-Agents.png");
+    public static GameResource BACKGROUND = new GameResource("/scenes/spawn/SpawnSceneBackground.png");
+    public static GameResource BACKGROUND_DOOR_HALF = new GameResource("/scenes/spawn/SpawnSceneBackground-DoorHalf.png");
+    public static GameResource BACKGROUND_AGENTS = new GameResource("/scenes/spawn/SpawnSceneBackground-Agents.png");
+
+    public static GameResource PLAYER_SPACE = new GameResource("/scenes/spawn/SpawnSceneUsablePlayerSpace.png");
 
 }

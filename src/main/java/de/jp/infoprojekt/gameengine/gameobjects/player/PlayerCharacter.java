@@ -5,12 +5,10 @@ import de.jp.infoprojekt.gameengine.gameobjects.AbstractGameObject;
 import de.jp.infoprojekt.resources.GameResource;
 import de.jp.infoprojekt.resources.ScalingEvent;
 import de.jp.infoprojekt.resources.gameobjects.Player;
+import de.jp.infoprojekt.util.FloatPoint;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * PlayerCharacter class
@@ -27,7 +25,7 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent 
     private float playerMovementSpeed = 0.004f;
     private boolean isSprinting = false;
     private float playerMovementSpeedSprintMultiplier = 1.5f;
-    private List<Rectangle2D> blockArea = new ArrayList<>();
+    private GameResource blockArea;
 
     //Render
     private GameResource player = Player.PLAYER;
@@ -46,32 +44,74 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent 
         }
     }
 
-    public void setBlockingArea(List<Rectangle2D> playerBlockingArea) {
-        this.blockArea = playerBlockingArea;
+    public void setBlockingArea(GameResource blockArea) {
+        this.blockArea = blockArea;
     }
 
     private void handleKeyInputs() {
         float finalPlayerSpeed = playerMovementSpeed * (isSprinting ? playerMovementSpeedSprintMultiplier : 1);
 
-        if (engine.getGameKeyHandler().isKeyDown(KeyEvent.VK_W)) {
-            setRelativeY(getRelativeY() - finalPlayerSpeed);
-        }else if (engine.getGameKeyHandler().isKeyDown(KeyEvent.VK_S)) {
-            setRelativeY(getRelativeY() + finalPlayerSpeed);
-        }
+        FloatPoint newRelPos = new FloatPoint(getRelativeX(), getRelativeY());
+
+        isSprinting = engine.getGameKeyHandler().isKeyDown(KeyEvent.VK_SHIFT);
+
+        boolean change = false;
 
         if (engine.getGameKeyHandler().isKeyDown(KeyEvent.VK_A)) {
-            setRelativeX(getRelativeX() - finalPlayerSpeed);
+            newRelPos.setX(getRelativeX() - finalPlayerSpeed);
             flipPlayerImage = true;
+            change = true;
         }else if (engine.getGameKeyHandler().isKeyDown(KeyEvent.VK_D)) {
+            newRelPos.setX(getRelativeX() + finalPlayerSpeed);
             flipPlayerImage = false;
-            setRelativeX(getRelativeX() + finalPlayerSpeed);
+            change = true;
         }
 
-        if (engine.getGameKeyHandler().isKeyDown(KeyEvent.VK_SHIFT)) {
-            isSprinting = true;
-        }else {
-            isSprinting = false;
+        if (engine.getGameKeyHandler().isKeyDown(KeyEvent.VK_W)) {
+            newRelPos.setY(getRelativeY() - finalPlayerSpeed);
+            change = true;
+        }else if (engine.getGameKeyHandler().isKeyDown(KeyEvent.VK_S)) {
+            newRelPos.setY(getRelativeY() + finalPlayerSpeed);
+            change = true;
         }
+
+        if (change) {
+            newRelPos = bindToAllowedArea(new FloatPoint(getRelativeX(), getRelativeY()), newRelPos);
+            setRelativeLocation(newRelPos);
+        }
+    }
+
+    //TODO clean up this mess if time
+    private FloatPoint bindToAllowedArea(FloatPoint oldPoint, FloatPoint newPoint) {
+        if (blockArea == null) {
+            return newPoint;
+        }
+
+        int x = (int) (blockArea.getResource().getWidth() * oldPoint.getX());
+        int y = (int) (blockArea.getResource().getHeight() * oldPoint.getY());
+
+        int newX = (int) (blockArea.getResource().getWidth() * newPoint.getX());
+        int newY = (int) (blockArea.getResource().getHeight() * newPoint.getY());
+
+        x = Math.max(0, Math.min(blockArea.getResource().getWidth() - 1, x));
+        y = Math.max(0, Math.min(blockArea.getResource().getHeight() - 1, y));
+
+        newX = Math.max(0, Math.min(blockArea.getResource().getWidth() - 1, newX));
+        newY = Math.max(0, Math.min(blockArea.getResource().getHeight() - 1, newY));
+
+        if (isNonTransparent(blockArea.getResource().getRGB(newX, newY))) {
+            return newPoint;
+        }else if (isNonTransparent(blockArea.getResource().getRGB(x, newY))) {
+            return new FloatPoint(oldPoint.getX(), newPoint.getY());
+        }else if (isNonTransparent(blockArea.getResource().getRGB(newX, y))) {
+            return new FloatPoint(newPoint.getX(), oldPoint.getY());
+        }else {
+            return oldPoint;
+        }
+    }
+
+    private boolean isNonTransparent(int rgb) {
+        return (rgb >> 24) != 0x00;
     }
 
     public boolean isMoveable() {
@@ -86,8 +126,23 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.drawImage(player.getResource(), flipPlayerImage ? player.getWidth() : 0, 0, flipPlayerImage ? -player.getWidth() : player.getWidth(), player.getHeight(), null);
+        int x = flipPlayerImage ? player.getWidth() : 0;
+        int y = 0;
+        int width = flipPlayerImage ? -player.getWidth() : player.getWidth();
+        int height = player.getHeight();
 
+        //Temp Scaling //TODO
+        /*float scale = (float) (getRelativeY() + 0.5 / 2); //0-1
+        System.out.println(scale);
+        scale = Math.max(0, Math.min(1, scale));
+
+        int newHeight = (int) (height * scale);
+        y = height - newHeight;
+        height = newHeight;*/
+
+        g.drawImage(player.getResource(), x, y, width, height, null);
+
+        //TODO remove debug
         g.setColor(Color.RED);
         g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
     }

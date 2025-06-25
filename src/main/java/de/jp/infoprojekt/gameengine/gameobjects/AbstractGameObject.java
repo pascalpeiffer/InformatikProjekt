@@ -2,6 +2,7 @@ package de.jp.infoprojekt.gameengine.gameobjects;
 
 import de.jp.infoprojekt.resources.ResourceManager;
 import de.jp.infoprojekt.resources.ScalingEvent;
+import de.jp.infoprojekt.util.FloatPoint;
 
 import javax.swing.*;
 
@@ -24,6 +25,10 @@ public abstract class AbstractGameObject extends JComponent implements ScalingEv
         this.relativeX = relativeX;
         this.relativeY = relativeY;
         applyLocation();
+    }
+
+    public void setRelativeLocation(FloatPoint point) {
+        setRelativeLocation(point.getX(), point.getY());
     }
 
     public float getRelativeX() {

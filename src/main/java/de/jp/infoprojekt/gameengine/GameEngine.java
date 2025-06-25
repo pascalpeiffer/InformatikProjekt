@@ -2,11 +2,8 @@ package de.jp.infoprojekt.gameengine;
 
 import de.jp.infoprojekt.gameengine.graphics.GameGraphics;
 import de.jp.infoprojekt.gameengine.state.GameStateManager;
-import de.jp.infoprojekt.gameengine.util.GameTickProvider;
+import de.jp.infoprojekt.util.GameTickProvider;
 import de.jp.infoprojekt.io.key.GameKeyHandler;
-
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 /**
  * GameEngine class

@@ -2,8 +2,6 @@ package de.jp.infoprojekt.gameengine.graphics.popup;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
 
-import javax.swing.*;
-
 /**
  * PopupManager class
  *

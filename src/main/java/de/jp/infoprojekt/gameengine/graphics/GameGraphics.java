@@ -2,7 +2,9 @@ package de.jp.infoprojekt.gameengine.graphics;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.graphics.fade.AbstractFade;
+import de.jp.infoprojekt.gameengine.graphics.fade.BlackFade;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
+import de.jp.infoprojekt.gameengine.scenes.gameovershotdead.GameOverShotDeadScene;
 import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
 import de.jp.infoprojekt.settings.SettingManager;
 import de.jp.infoprojekt.settings.graphics.GraphicSettings;
@@ -44,9 +46,9 @@ public class GameGraphics {
         updateWindowType();
 
         frame.setIconImage(ResourceManager.TITLE_SCENE_BACKGROUND);
-        frame.setTitle("Game");
+        frame.setTitle("Mission Takedown");
 
-        frame.addComponentListener(new ComponentAdapter() {
+        /*frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 applyNewSize();
@@ -57,7 +59,7 @@ public class GameGraphics {
                 applyNewSize();
             }
 
-        });
+        });*/
 
         addUpdateEvent();
     }
@@ -90,12 +92,12 @@ public class GameGraphics {
 
         /*new Thread(() -> {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             SwingUtilities.invokeLater(() -> {
-                switchToScene(new SpawnScene(), new BlackFade());
+                switchToScene(new GameOverShotDeadScene(), new BlackFade());
             });
         }).start();*/
     }
@@ -114,6 +116,10 @@ public class GameGraphics {
 
     public void addFadeOverlay(Component component) {
         frame.getLayeredPane().add(component, new Integer(Integer.MAX_VALUE)); //Max value -> nothing should be higher
+    }
+
+    public void addDialogLayer(Component component) {
+        frame.getLayeredPane().add(component, new Integer(6000));
     }
 
     public void removeLayer(Component component) {

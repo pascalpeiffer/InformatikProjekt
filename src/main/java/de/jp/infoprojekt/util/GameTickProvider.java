@@ -1,4 +1,4 @@
-package de.jp.infoprojekt.gameengine.util;
+package de.jp.infoprojekt.util;
 
 import javax.swing.*;
 import java.util.ArrayList;
