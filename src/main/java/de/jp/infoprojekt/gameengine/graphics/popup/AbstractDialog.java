@@ -9,6 +9,8 @@ import de.jp.infoprojekt.util.MinecraftTextRenderer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractDialog extends JComponent implements ScalingEvent {
 
@@ -16,15 +18,14 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
     private final float heightDivider = 4;
     private final float bottomSeparateDivider = 25;
 
-    private String title = "Mr. G:";
-    private String mainText = "Ich verstehe. §4Eagle es war eine Ehre mit dir zu arbeiten. Trotzdem verfügst du leider über zu viele Informationen von vergangenen Missionen, dass wir dich einfach aufhören lassen können. Wie gesagt es war mir eine Ehre. Ich verstehe. Eagle es war eine Ehre mit dir zu arbeiten. Trotzdem verfügst du leider über zu viele Informationen von vergangenen Missionen, dass wir dich einfach aufhören lassen können. Wie gesagt es war mir eine Ehre.";
+    private String title;
+    private final List<String> dialogs = new ArrayList<>();
+    private int dialogIndex = 0;
 
     private Font titleFont = FontManager.JERSEY_10;
     private Font mainFont = FontManager.JERSEY_20;
 
-    private int index = 0;
 
-    Timer timer;
     public AbstractDialog(GameEngine engine) {
         setFocusable(false);
         ResourceManager.addScalingListener(this);
@@ -32,12 +33,42 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
         engine.getGraphics().addDialogLayer(this);
 
         setSizeAndLoc();
+    }
 
-        timer = new Timer(50, e -> {
-            if (index >= mainText.length()) {
+    public void proceed(int index, String title) {
+        if (dialogs.size() > index) {
+            dialogIndex = index;
+        }
+        renderIndex = 0;
+    }
+
+    public void proceed(String title) {
+        proceed(dialogIndex + 1, title);
+    }
+
+    public void proceed() {
+        proceed(dialogIndex + 1, getTitle());
+    }
+
+    public void show(int delay) {
+        show(delay, () -> {});
+    }
+
+    private int renderIndex = 0;
+    private Timer timer;
+    public void show(int delay, Runnable callback) {
+        if (timer != null) {
+            timer.stop();
+            timer = null;
+        }
+        renderIndex = 0;
+
+        timer = new Timer(delay, e -> {
+            if (renderIndex >= dialogs.get(dialogIndex).length()) {
+                callback.run();
                 timer.stop();
             }
-            index++;
+            renderIndex++;
             repaint();
         });
         timer.start();
@@ -58,8 +89,9 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.setColor(Color.GREEN);
-        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        //TODO debug mode?
+        //g.setColor(Color.GREEN);
+        //g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 
         g.drawImage(Dialog.DIALOG.getResource(), 0, 0, getWidth(), getHeight(), null);
 
@@ -70,8 +102,38 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
         g.setColor(Color.WHITE);
         g.drawString(title, getWidth() / 2 - metrics.stringWidth(title) / 2, metrics.getHeight());
 
-        MinecraftTextRenderer.drawFormattedString(g, mainText, getWidth() / 20, (int) (metrics.getHeight() * 1.6f), getWidth() - getWidth() / 6, getHeight() - (int) (metrics.getHeight() * 1.6f), mainFont.deriveFont((float) 30 * ResourceManager.getScaling().getX()), index);
+        MinecraftTextRenderer.drawFormattedString(g, dialogs.get(dialogIndex), getWidth() / 20, (int) (metrics.getHeight() * 1.6f), getWidth() - getWidth() / 6, getHeight() - (int) (metrics.getHeight() * 1.6f), mainFont.deriveFont((float) 30 * ResourceManager.getScaling().getX()), renderIndex);
     }
 
-    //private void drawCenteredString(Graphics g, String text, )
+    public void addDialog(String dialog) {
+        dialogs.add(dialog);
+    }
+
+    public List<String> getDialogs() {
+        return dialogs;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setMainFont(Font mainFont) {
+        this.mainFont = mainFont;
+    }
+
+    public void setTitleFont(Font titleFont) {
+        this.titleFont = titleFont;
+    }
+
+    public Font getMainFont() {
+        return mainFont;
+    }
+
+    public Font getTitleFont() {
+        return titleFont;
+    }
+
+    public String getTitle() {
+        return title;
+    }
 }
