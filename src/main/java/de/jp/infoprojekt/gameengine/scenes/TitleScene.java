@@ -1,6 +1,6 @@
 package de.jp.infoprojekt.gameengine.scenes;
 
-import de.jp.infoprojekt.util.ResourceManager;
+import de.jp.infoprojekt.resources.ResourceManager;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

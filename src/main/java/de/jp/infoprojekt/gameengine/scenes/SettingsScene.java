@@ -2,7 +2,7 @@ package de.jp.infoprojekt.gameengine.scenes;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.settings.graphics.WindowTypeSetting;
-import de.jp.infoprojekt.util.ResourceManager;
+import de.jp.infoprojekt.resources.ResourceManager;
 
 import javax.swing.*;
 import java.awt.*;

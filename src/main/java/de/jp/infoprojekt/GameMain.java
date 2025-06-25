@@ -2,8 +2,7 @@ package de.jp.infoprojekt;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.settings.SettingManager;
-import de.jp.infoprojekt.util.ResourceManager;
-import sun.java2d.pipe.hw.ExtendedBufferCapabilities;
+import de.jp.infoprojekt.resources.ResourceManager;
 
 import java.awt.*;
 import java.io.IOException;

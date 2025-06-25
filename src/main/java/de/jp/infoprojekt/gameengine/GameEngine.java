@@ -2,6 +2,8 @@ package de.jp.infoprojekt.gameengine;
 
 import de.jp.infoprojekt.gameengine.graphics.GameGraphics;
 import de.jp.infoprojekt.gameengine.state.GameStateManager;
+import de.jp.infoprojekt.gameengine.util.GameTickProvider;
+import de.jp.infoprojekt.io.key.GameKeyHandler;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -16,9 +18,13 @@ public class GameEngine {
 
     private GameGraphics graphics;
     private GameStateManager stateManager;
+    private GameKeyHandler gameKeyHandler;
+    private GameTickProvider tickProvider;
 
     public GameEngine() {
+        tickProvider = new GameTickProvider(100); //Ticks per second
         graphics = new GameGraphics(this);
+        gameKeyHandler = new GameKeyHandler(this);
         stateManager = new GameStateManager(this);
     }
 
@@ -54,4 +60,11 @@ public class GameEngine {
         return stateManager;
     }
 
+    public GameKeyHandler getGameKeyHandler() {
+        return gameKeyHandler;
+    }
+
+    public GameTickProvider getTickProvider() {
+        return tickProvider;
+    }
 }

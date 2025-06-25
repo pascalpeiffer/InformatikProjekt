@@ -43,7 +43,7 @@ public class BlackFade extends AbstractFade {
 
         alpha = 0f;
         increment = true;
-        graphics.addOverlayLayer(this);
+        graphics.addFadeOverlay(this);
 
         timer = new Timer(20, e -> {
             alpha += increment ? 0.05f : -0.05f;

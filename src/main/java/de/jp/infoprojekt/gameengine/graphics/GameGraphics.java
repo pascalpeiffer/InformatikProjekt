@@ -2,13 +2,12 @@ package de.jp.infoprojekt.gameengine.graphics;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.graphics.fade.AbstractFade;
-import de.jp.infoprojekt.gameengine.graphics.fade.BlackFade;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
-import de.jp.infoprojekt.gameengine.scenes.SettingsScene;
-import de.jp.infoprojekt.gameengine.scenes.TitleScene;
+import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
 import de.jp.infoprojekt.settings.SettingManager;
 import de.jp.infoprojekt.settings.graphics.GraphicSettings;
-import de.jp.infoprojekt.util.ResourceManager;
+import de.jp.infoprojekt.resources.ResourceManager;
+import de.jp.infoprojekt.util.FloatPair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,30 +49,55 @@ public class GameGraphics {
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                if (currentScene != null) {
-                    int width = getFrame().getWidth() - getFrame().getInsets().left - getFrame().getInsets().right;
-                    int height = getFrame().getHeight() - getFrame().getInsets().top - getFrame().getInsets().bottom;
-                    currentScene.setSize(width, height);
-                }
+                applyNewSize();
             }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                applyNewSize();
+            }
+
         });
+
+        addUpdateEvent();
+    }
+
+    private void addUpdateEvent() {
+        final Dimension[] oldDim = {new Dimension(0, 0)};
+        new Timer(100, e -> {
+            Dimension currentSize = frame.getSize();
+            if (!currentSize.equals(oldDim[0])) {
+                oldDim[0] = currentSize;
+                applyNewSize();
+            }
+        }).start();
+    }
+
+    private void applyNewSize() {
+        int width = getFrame().getWidth() - getFrame().getInsets().left - getFrame().getInsets().right;
+        int height = getFrame().getHeight() - getFrame().getInsets().top - getFrame().getInsets().bottom;
+        if (currentScene != null) {
+            currentScene.setSize(width, height);
+        }
+
+        ResourceManager.scalingProperty().set(new FloatPair((float) width / 1920, (float) height / 1080));
     }
 
     public void start() {
         frame.setVisible(true);
 
-        switchToScene(new SettingsScene(gameEngine));
+        switchToScene(new SpawnScene(gameEngine));
 
-        new Thread(() -> {
+        /*new Thread(() -> {
             try {
-                Thread.sleep(10000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             SwingUtilities.invokeLater(() -> {
-                switchToScene(new TitleScene(), new BlackFade());
+                switchToScene(new SpawnScene(), new BlackFade());
             });
-        }).start();
+        }).start();*/
     }
 
     public void switchToScene(AbstractScene scene) {
@@ -88,8 +112,8 @@ public class GameGraphics {
         fader.fade(scene, this);
     }
 
-    public void addOverlayLayer(Component component) {
-        frame.getLayeredPane().add(component, JLayeredPane.DRAG_LAYER);
+    public void addFadeOverlay(Component component) {
+        frame.getLayeredPane().add(component, new Integer(Integer.MAX_VALUE)); //Max value -> nothing should be higher
     }
 
     public void removeLayer(Component component) {
