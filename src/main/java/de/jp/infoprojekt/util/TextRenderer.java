@@ -4,9 +4,9 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MinecraftTextRenderer {
+public class TextRenderer {
 
-    // Mapping Minecraft color codes to actual colors
+    // Mapping colors
     private static final Map<Character, Color> colorMap = new HashMap<>();
     static {
         colorMap.put('0', new Color(0x000000));

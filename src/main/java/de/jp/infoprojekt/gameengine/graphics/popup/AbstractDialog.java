@@ -5,7 +5,7 @@ import de.jp.infoprojekt.resources.ResourceManager;
 import de.jp.infoprojekt.resources.ScalingEvent;
 import de.jp.infoprojekt.resources.dialog.Dialog;
 import de.jp.infoprojekt.util.FontManager;
-import de.jp.infoprojekt.util.MinecraftTextRenderer;
+import de.jp.infoprojekt.util.TextRenderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,7 +102,7 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
         g.setColor(Color.WHITE);
         g.drawString(title, getWidth() / 2 - metrics.stringWidth(title) / 2, metrics.getHeight());
 
-        MinecraftTextRenderer.drawFormattedString(g, dialogs.get(dialogIndex), getWidth() / 20, (int) (metrics.getHeight() * 1.6f), getWidth() - getWidth() / 6, getHeight() - (int) (metrics.getHeight() * 1.6f), mainFont.deriveFont((float) 30 * ResourceManager.getScaling().getX()), renderIndex);
+        TextRenderer.drawFormattedString(g, dialogs.get(dialogIndex), getWidth() / 20, (int) (metrics.getHeight() * 1.6f), getWidth() - getWidth() / 6, getHeight() - (int) (metrics.getHeight() * 1.6f), mainFont.deriveFont((float) 30 * ResourceManager.getScaling().getX()), renderIndex);
     }
 
     public void addDialog(String dialog) {
