@@ -6,6 +6,9 @@ import de.jp.infoprojekt.resources.GameResource;
 import de.jp.infoprojekt.resources.ScalingEvent;
 import de.jp.infoprojekt.resources.gameobjects.Player;
 import de.jp.infoprojekt.util.FloatPoint;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -26,6 +29,7 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent 
     private boolean isSprinting = false;
     private float playerMovementSpeedSprintMultiplier = 1.5f;
     private GameResource blockArea;
+    private boolean moving = false;
 
     //Render
     private GameResource player = Player.PLAYER;
@@ -38,9 +42,17 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent 
         engine.getTickProvider().onTick(this::tick);
     }
 
+    int lastMoveTick = 0;
     public void tick() {
         if (isMoveable) {
             handleKeyInputs();
+        }
+
+        if (moving) {
+            lastMoveTick++;
+            //if () {
+                //Todo moving animatio
+            //}
         }
     }
 
@@ -76,8 +88,11 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent 
         }
 
         if (change) {
+            moving = true;
             newRelPos = bindToAllowedArea(new FloatPoint(getRelativeX(), getRelativeY()), newRelPos);
             setRelativeLocation(newRelPos);
+        }else {
+            moving = false;
         }
     }
 

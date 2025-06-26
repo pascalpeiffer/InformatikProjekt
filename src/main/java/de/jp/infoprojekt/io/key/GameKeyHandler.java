@@ -39,6 +39,14 @@ public class GameKeyHandler {
         });
     }
 
+    public void onKeyDown(int keyCode, Runnable run) {
+        keysDown.addListener((ListChangeListener<? super Integer>) c -> {
+            if (keysDown.contains(keyCode)) {
+                run.run();
+            }
+        });
+    }
+
     public boolean isKeyDown(int keyCode) {
         return keysDown.contains(keyCode);
     }

@@ -7,6 +7,7 @@ import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
 import de.jp.infoprojekt.gameengine.scenes.TitleScene;
 import de.jp.infoprojekt.gameengine.scenes.gameovershotdead.GameOverShotDeadScene;
 import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
+import de.jp.infoprojekt.io.key.GameKeyHandler;
 import de.jp.infoprojekt.settings.SettingManager;
 import de.jp.infoprojekt.settings.graphics.GraphicSettings;
 import de.jp.infoprojekt.resources.ResourceManager;
@@ -16,6 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,31 +51,23 @@ public class GameGraphics {
         frame.setIconImage(ResourceManager.TITLE_SCENE_BACKGROUND);
         frame.setTitle("Mission Takedown");
 
-        /*frame.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                applyNewSize();
-            }
-
-            @Override
-            public void componentMoved(ComponentEvent e) {
-                applyNewSize();
-            }
-
-        });*/
-
         addUpdateEvent();
     }
 
     private void addUpdateEvent() {
         final Dimension[] oldDim = {new Dimension(0, 0)};
-        new Timer(100, e -> {
-            Dimension currentSize = frame.getSize();
-            if (!currentSize.equals(oldDim[0])) {
-                oldDim[0] = currentSize;
-                applyNewSize();
+        final int[] tickIndex = {0};
+        gameEngine.getTickProvider().onTick(() -> {
+            if (tickIndex[0] >= 10) {
+                Dimension currentSize = frame.getSize();
+                if (!currentSize.equals(oldDim[0])) {
+                    oldDim[0] = currentSize;
+                    applyNewSize();
+                }
+                tickIndex[0] = 0;
             }
-        }).start();
+            tickIndex[0]++;
+        });
     }
 
     private void applyNewSize() {
@@ -90,7 +84,6 @@ public class GameGraphics {
         frame.setVisible(true);
 
         switchToScene(new SpawnScene(gameEngine));
-
         /*new Thread(() -> {
             try {
                 Thread.sleep(5000);

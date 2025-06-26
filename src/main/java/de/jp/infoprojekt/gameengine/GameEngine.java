@@ -3,8 +3,11 @@ package de.jp.infoprojekt.gameengine;
 import de.jp.infoprojekt.gameengine.graphics.GameGraphics;
 import de.jp.infoprojekt.gameengine.graphics.popup.GameDialogManager;
 import de.jp.infoprojekt.gameengine.state.GameStateManager;
+import de.jp.infoprojekt.settings.graphics.WindowTypeSetting;
 import de.jp.infoprojekt.util.GameTickProvider;
 import de.jp.infoprojekt.io.key.GameKeyHandler;
+
+import java.awt.event.KeyEvent;
 
 /**
  * GameEngine class
@@ -30,6 +33,16 @@ public class GameEngine {
 
     public void start() {
         graphics.start();
+
+        getGameKeyHandler().onKeyDown(KeyEvent.VK_F11, () -> {
+            if (graphics.getSettings().getCurrentWindowSetting() == WindowTypeSetting.WINDOWED) {
+                graphics.getSettings().setCurrentWindowSetting(WindowTypeSetting.WINDOWED_FULLSCREEN);
+                graphics.updateWindowType();
+            }else if (graphics.getSettings().getCurrentWindowSetting() == WindowTypeSetting.WINDOWED_FULLSCREEN) {
+                graphics.getSettings().setCurrentWindowSetting(WindowTypeSetting.WINDOWED);
+                graphics.updateWindowType();
+            }
+        });
     }
 
     public GameGraphics getGraphics() {
