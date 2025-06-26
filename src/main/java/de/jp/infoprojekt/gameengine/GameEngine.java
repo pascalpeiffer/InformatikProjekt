@@ -1,6 +1,7 @@
 package de.jp.infoprojekt.gameengine;
 
 import de.jp.infoprojekt.gameengine.graphics.GameGraphics;
+import de.jp.infoprojekt.gameengine.graphics.popup.GameDialogManager;
 import de.jp.infoprojekt.gameengine.state.GameStateManager;
 import de.jp.infoprojekt.util.GameTickProvider;
 import de.jp.infoprojekt.io.key.GameKeyHandler;
@@ -17,36 +18,18 @@ public class GameEngine {
     private GameStateManager stateManager;
     private GameKeyHandler gameKeyHandler;
     private GameTickProvider tickProvider;
+    private GameDialogManager dialogManager;
 
     public GameEngine() {
         tickProvider = new GameTickProvider(100); //Ticks per second
         graphics = new GameGraphics(this);
+        dialogManager = new GameDialogManager(this);
         gameKeyHandler = new GameKeyHandler(this);
         stateManager = new GameStateManager(this);
     }
 
     public void start() {
         graphics.start();
-
-        /*graphics.getFrame().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                System.out.println("Key Released: " + e.getKeyCode());
-                super.keyReleased(e);
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                System.out.println("Key Pressed: " + e.getKeyCode());
-                super.keyPressed(e);
-            }
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-                System.out.println("Key Typed: " + e.getKeyCode());
-                super.keyTyped(e);
-            }
-        });*/
     }
 
     public GameGraphics getGraphics() {
@@ -63,5 +46,9 @@ public class GameEngine {
 
     public GameTickProvider getTickProvider() {
         return tickProvider;
+    }
+
+    public GameDialogManager getDialogManager() {
+        return dialogManager;
     }
 }

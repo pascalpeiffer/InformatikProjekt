@@ -34,10 +34,6 @@ public class SpawnScene extends AbstractScene implements ScalingEvent {
         player.setBlockingArea(SpawnSceneResource.PLAYER_SPACE);
         add(player);
 
-        new PreGameDialog(engine);
-
-
-
         new Timer(500, e -> {
             if (spawnBackground == SpawnSceneResource.BACKGROUND) {
                 spawnBackground = SpawnSceneResource.BACKGROUND_DOOR_HALF;
@@ -50,6 +46,12 @@ public class SpawnScene extends AbstractScene implements ScalingEvent {
         });
 
         ResourceManager.addScalingListener(this);
+    }
+
+    @Override
+    public void sceneShown() {
+        PreGameDialog preGameDialog = new PreGameDialog(engine);
+        engine.getDialogManager().setDialog(preGameDialog);
     }
 
     @Override

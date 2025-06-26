@@ -4,6 +4,7 @@ import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.graphics.fade.AbstractFade;
 import de.jp.infoprojekt.gameengine.graphics.fade.BlackFade;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
+import de.jp.infoprojekt.gameengine.scenes.TitleScene;
 import de.jp.infoprojekt.gameengine.scenes.gameovershotdead.GameOverShotDeadScene;
 import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
 import de.jp.infoprojekt.settings.SettingManager;
@@ -97,7 +98,7 @@ public class GameGraphics {
                 throw new RuntimeException(e);
             }
             SwingUtilities.invokeLater(() -> {
-                switchToScene(new GameOverShotDeadScene(), new BlackFade());
+                switchToScene(new TitleScene(), new BlackFade());
             });
         }).start();*/
     }
@@ -107,7 +108,9 @@ public class GameGraphics {
         int width = getFrame().getWidth() - getFrame().getInsets().left - getFrame().getInsets().right;
         int height = getFrame().getHeight() - getFrame().getInsets().top - getFrame().getInsets().bottom;
         currentScene.setSize(width, height);
+        gameEngine.getDialogManager().unsetDialog();
         frame.setContentPane(currentScene);
+        currentScene.sceneShown();
     }
 
     public void switchToScene(AbstractScene scene, AbstractFade fader) {

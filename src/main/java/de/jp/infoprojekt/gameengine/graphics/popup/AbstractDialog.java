@@ -14,40 +14,27 @@ import java.util.List;
 
 public abstract class AbstractDialog extends JComponent implements ScalingEvent {
 
+    private final GameEngine engine;
+
     private final float widthDivider = 2;
     private final float heightDivider = 4;
     private final float bottomSeparateDivider = 25;
 
+    private boolean continueHintShown = false;
+    private final String continueHintText = "Leer für weiter!";
+
     private String title;
-    private final List<String> dialogs = new ArrayList<>();
-    private int dialogIndex = 0;
+    private String dialog;
 
     private Font titleFont = FontManager.JERSEY_10;
     private Font mainFont = FontManager.JERSEY_20;
 
-
     public AbstractDialog(GameEngine engine) {
+        this.engine = engine;
         setFocusable(false);
         ResourceManager.addScalingListener(this);
 
-        engine.getGraphics().addDialogLayer(this);
-
         setSizeAndLoc();
-    }
-
-    public void proceed(int index, String title) {
-        if (dialogs.size() > index) {
-            dialogIndex = index;
-        }
-        renderIndex = 0;
-    }
-
-    public void proceed(String title) {
-        proceed(dialogIndex + 1, title);
-    }
-
-    public void proceed() {
-        proceed(dialogIndex + 1, getTitle());
     }
 
     public void show(int delay) {
@@ -57,21 +44,29 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
     private int renderIndex = 0;
     private Timer timer;
     public void show(int delay, Runnable callback) {
-        if (timer != null) {
-            timer.stop();
-            timer = null;
-        }
-        renderIndex = 0;
-
+        resetShow();
         timer = new Timer(delay, e -> {
-            if (renderIndex >= dialogs.get(dialogIndex).length()) {
-                callback.run();
+            if (renderIndex >= dialog.length()) {
+                new Thread(callback).start();
                 timer.stop();
             }
             renderIndex++;
             repaint();
         });
         timer.start();
+    }
+
+    public void resetShow() {
+        continueHintShown = false;
+        if (timer != null) {
+            timer.stop();
+            timer = null;
+        }
+        renderIndex = 0;
+    }
+
+    public boolean isFullyShown() {
+        return renderIndex >= dialog.length();
     }
 
     @Override
@@ -81,7 +76,7 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
 
     private void setSizeAndLoc() {
         setSize((int) (ResourceManager.getGameScreenWidth() / widthDivider), (int) (ResourceManager.getGameScreenHeight() / heightDivider));
-        setLocation(ResourceManager.getGameScreenWidth() / 2 - getWidth() / 2, (int) ((int) (ResourceManager.getGameScreenHeight() / heightDivider * (heightDivider -  1)) - (ResourceManager.getGameScreenHeight() / bottomSeparateDivider)));
+        setLocation(ResourceManager.getGameScreenWidth() / 2 - getWidth() / 2, (int) ((int) (ResourceManager.getGameScreenHeight() / heightDivider * (heightDivider -  1))));
         repaint();
     }
 
@@ -90,10 +85,10 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
         super.paintComponent(g);
 
         //TODO debug mode?
-        //g.setColor(Color.GREEN);
-        //g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        g.setColor(Color.GREEN);
+        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 
-        g.drawImage(Dialog.DIALOG.getResource(), 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(Dialog.DIALOG.getResource(), 0, 0, getWidth(), (int) (getHeight() - (ResourceManager.getGameScreenHeight() / bottomSeparateDivider)), null);
 
         Font f = titleFont.deriveFont(50 * ResourceManager.getScaling().getX());
         FontMetrics metrics = g.getFontMetrics(f);
@@ -102,15 +97,46 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
         g.setColor(Color.WHITE);
         g.drawString(title, getWidth() / 2 - metrics.stringWidth(title) / 2, metrics.getHeight());
 
-        TextRenderer.drawFormattedString(g, dialogs.get(dialogIndex), getWidth() / 20, (int) (metrics.getHeight() * 1.6f), getWidth() - getWidth() / 6, getHeight() - (int) (metrics.getHeight() * 1.6f), mainFont.deriveFont((float) 30 * ResourceManager.getScaling().getX()), renderIndex);
+        TextRenderer.drawFormattedString(g, dialog, getWidth() / 20, (int) (metrics.getHeight() * 1.6f), getWidth() - getWidth() / 6, (int) (getHeight() - (int) (metrics.getHeight() * 1.6f) - (ResourceManager.getGameScreenHeight() / bottomSeparateDivider)), mainFont.deriveFont((float) 30 * ResourceManager.getScaling().getX()), renderIndex);
+
+        if (isContinueHintShown()) {
+            drawContinueHint(g);
+        }
     }
 
-    public void addDialog(String dialog) {
-        dialogs.add(dialog);
+    private void drawContinueHint(Graphics g) {
+        int continueHintWidth = getWidth() / 4;
+        int continueHintHeight = getHeight() / 5;
+
+        int continueHintBottomDistance = continueHintHeight / 2;
+
+        g.drawImage(Dialog.DIALOG.getResource(), getWidth() / 2 - continueHintWidth / 2, getHeight() - continueHintHeight - continueHintBottomDistance, continueHintWidth, continueHintHeight, null);
+
+        Font continueHintFont = mainFont.deriveFont((float) 30 * ResourceManager.getScaling().getX());
+        FontMetrics m = g.getFontMetrics(continueHintFont);
+
+        g.setColor(Color.WHITE);
+        g.drawString(continueHintText, getWidth() / 2 - (m.stringWidth(continueHintText) / 2), getHeight() - continueHintHeight - continueHintBottomDistance + (continueHintHeight / 2) + m.getDescent());
+
+        //g.setColor(Color.GREEN);
+        //g.drawRect(getWidth() / 2 - (m.stringWidth(continueHintText) / 2), getHeight() - continueHintHeight - continueHintBottomDistance + (continueHintHeight / 2) - (m.getAscent() / 2), m.stringWidth(continueHintText), m.getAscent());
     }
 
-    public List<String> getDialogs() {
-        return dialogs;
+    public void setDialog(String dialog) {
+        resetShow();
+        this.dialog = dialog;
+    }
+
+    public void setContinueHintShown(boolean continueHintShown) {
+        this.continueHintShown = continueHintShown;
+    }
+
+    public boolean isContinueHintShown() {
+        return continueHintShown;
+    }
+
+    public String getDialog() {
+        return dialog;
     }
 
     public void setTitle(String title) {
