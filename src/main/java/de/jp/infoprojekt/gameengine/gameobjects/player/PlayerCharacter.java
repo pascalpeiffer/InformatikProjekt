@@ -6,11 +6,12 @@ import de.jp.infoprojekt.gameengine.tick.GameTick;
 import de.jp.infoprojekt.resources.GameAudioResource;
 import de.jp.infoprojekt.resources.GameResource;
 import de.jp.infoprojekt.resources.ScalingEvent;
-import de.jp.infoprojekt.resources.gameobjects.Player;
+import de.jp.infoprojekt.resources.gameobjects.PlayerResource;
 import de.jp.infoprojekt.util.FloatPoint;
 
 import javax.sound.sampled.Clip;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * PlayerCharacter class
@@ -31,7 +32,7 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
     private boolean moving = false;
 
     //Render
-    private GameResource gameResource = Player.PLAYER;
+    private GameResource gameResource = PlayerResource.PLAYER;
     private boolean flipPlayerImage = false;
     private float playerScalingConstant = 1;
 
@@ -44,7 +45,7 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
     }
 
     private int lastMoveTick = 0;
-    private Clip steppingSound;
+    private GameAudioResource.Instance steppingSound;
     public void tick(long currentTick) {
         if (isMoveable) {
             handleKeyInputs();
@@ -53,19 +54,17 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
         if (moving) {
 
             if (playerSteppingSound != null && steppingSound == null) {
-                steppingSound = playerSteppingSound.play(0.3f);
-                steppingSound.loop(Clip.LOOP_CONTINUOUSLY);
-                steppingSound.start();
+                steppingSound = playerSteppingSound.create().loop(Clip.LOOP_CONTINUOUSLY).play();
             }
 
             lastMoveTick++;
             if (lastMoveTick >= 10) {
                 lastMoveTick = 0;
 
-                if (gameResource == Player.PLAYER) {
-                    gameResource = Player.PLAYER_MOVEMENT;
+                if (gameResource == PlayerResource.PLAYER) {
+                    gameResource = PlayerResource.PLAYER_MOVEMENT;
                 }else {
-                    gameResource = Player.PLAYER;
+                    gameResource = PlayerResource.PLAYER;
                 }
                 repaint();
             }
@@ -76,8 +75,8 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
                 steppingSound = null;
             }
 
-            if (gameResource == Player.PLAYER_MOVEMENT) {
-                gameResource = Player.PLAYER;
+            if (gameResource == PlayerResource.PLAYER_MOVEMENT) {
+                gameResource = PlayerResource.PLAYER;
                 repaint();
             }
         }
@@ -129,33 +128,34 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
         }
     }
 
-    //TODO clean up this mess if time
     private FloatPoint bindToAllowedArea(FloatPoint oldPoint, FloatPoint newPoint) {
         if (blockArea == null) {
             return newPoint;
         }
 
-        int x = (int) (blockArea.getResource().getWidth() * oldPoint.getX());
-        int y = (int) (blockArea.getResource().getHeight() * oldPoint.getY());
+        BufferedImage resource = blockArea.getResource();
+        int width = resource.getWidth();
+        int height = resource.getHeight();
 
-        int newX = (int) (blockArea.getResource().getWidth() * newPoint.getX());
-        int newY = (int) (blockArea.getResource().getHeight() * newPoint.getY());
+        int oldX = clamp((int) (width * oldPoint.getX()), 0, width - 1);
+        int oldY = clamp((int) (height * oldPoint.getY()), 0, height - 1);
 
-        x = Math.max(0, Math.min(blockArea.getResource().getWidth() - 1, x));
-        y = Math.max(0, Math.min(blockArea.getResource().getHeight() - 1, y));
+        int newX = clamp((int) (width * newPoint.getX()), 0, width - 1);
+        int newY = clamp((int) (height * newPoint.getY()), 0, height - 1);
 
-        newX = Math.max(0, Math.min(blockArea.getResource().getWidth() - 1, newX));
-        newY = Math.max(0, Math.min(blockArea.getResource().getHeight() - 1, newY));
-
-        if (isNonTransparent(blockArea.getResource().getRGB(newX, newY))) {
+        if (isNonTransparent(resource.getRGB(newX, newY))) {
             return newPoint;
-        }else if (isNonTransparent(blockArea.getResource().getRGB(x, newY))) {
+        } else if (isNonTransparent(resource.getRGB(oldX, newY))) {
             return new FloatPoint(oldPoint.getX(), newPoint.getY());
-        }else if (isNonTransparent(blockArea.getResource().getRGB(newX, y))) {
+        } else if (isNonTransparent(resource.getRGB(newX, oldY))) {
             return new FloatPoint(newPoint.getX(), oldPoint.getY());
-        }else {
+        } else {
             return oldPoint;
         }
+    }
+
+    private int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
     }
 
     public int getRGBOnBlockArea() {
@@ -206,18 +206,14 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
         height = newHeight;
 
         g.drawImage(gameResource.getResource(), x, y, width, height, null);
-
-        //TODO remove debug
-        //g.setColor(Color.RED);
-        //g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
     }
 
     @Override
-    public void scale(float width, float height) {
+    public void scale(float widthMultiply, float heightMultiply) {
         if (gameResource != null) {
             setSize(gameResource.getWidth(), gameResource.getHeight());
         }
-        super.scale(width, height);
+        super.scale(widthMultiply, heightMultiply);
     }
 
     public void setPlayerSteppingSound(GameAudioResource playerSteppingSound) {

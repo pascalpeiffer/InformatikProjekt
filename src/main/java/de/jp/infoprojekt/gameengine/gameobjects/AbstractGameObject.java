@@ -17,6 +17,8 @@ public abstract class AbstractGameObject extends JComponent implements ScalingEv
     private float relativeX;
     private float relativeY;
 
+    private boolean disableLocationFix = false;
+
     public AbstractGameObject() {
         ResourceManager.addScalingListener(this);
     }
@@ -64,9 +66,21 @@ public abstract class AbstractGameObject extends JComponent implements ScalingEv
         boundRelative();
         int x = (int) (relativeX * ResourceManager.getGameScreenWidth());
         int y = (int) (relativeY * ResourceManager.getGameScreenHeight());
-        x = x - getWidth() / 2;
-        y = y - getHeight();
+
+        if (!disableLocationFix) {
+            x = x - getWidth() / 2;
+            y = y - getHeight();
+        }
+
         setLocation(x, y);
         repaint();
+    }
+
+    public void setDisableLocationFix(boolean disableLocationFix) {
+        this.disableLocationFix = disableLocationFix;
+    }
+
+    public boolean isDisableLocationFix() {
+        return disableLocationFix;
     }
 }

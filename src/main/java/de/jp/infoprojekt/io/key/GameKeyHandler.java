@@ -23,6 +23,8 @@ public class GameKeyHandler {
 
     private final ObservableList<Integer> keysDown = FXCollections.observableList(new ArrayList<>());
 
+    private boolean inputEnabled = true;
+
     public GameKeyHandler(GameEngine gameEngine) {
         this.gameEngine = gameEngine;
 
@@ -42,13 +44,24 @@ public class GameKeyHandler {
     public void onKeyDown(int keyCode, Runnable run) {
         keysDown.addListener((ListChangeListener<? super Integer>) c -> {
             if (keysDown.contains(keyCode)) {
+                if (!inputEnabled) {
+                    return;
+                }
                 run.run();
             }
         });
     }
 
     public boolean isKeyDown(int keyCode) {
-        return keysDown.contains(keyCode);
+        return inputEnabled && keysDown.contains(keyCode);
+    }
+
+    public void setInputEnabled(boolean inputEnabled) {
+        this.inputEnabled = inputEnabled;
+    }
+
+    public boolean isInputEnabled() {
+        return inputEnabled;
     }
 
     private class GameKeyHandlerImpl implements KeyListener {

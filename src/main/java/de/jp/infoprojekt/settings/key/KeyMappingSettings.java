@@ -14,6 +14,8 @@ public class KeyMappingSettings extends AbstractSettings {
     public int INTERACT = KeyEvent.VK_E;
     public int SPRINT = KeyEvent.VK_SHIFT;
     public int DIALOG_CONTINUE = KeyEvent.VK_SPACE;
+    public int OPEN_FILE = KeyEvent.VK_TAB;
+    public int FULLSCREEN = KeyEvent.VK_F11;
 
     @Override
     public String getUniqueName() {
@@ -31,6 +33,8 @@ public class KeyMappingSettings extends AbstractSettings {
         json.put("interact", INTERACT);
         json.put("sprint", SPRINT);
         json.put("dialog_continue", DIALOG_CONTINUE);
+        json.put("open_file", OPEN_FILE);
+        json.put("fullscreen", FULLSCREEN);
 
         return json;
     }
@@ -57,6 +61,12 @@ public class KeyMappingSettings extends AbstractSettings {
         }
         if (jsonObject.has("dialog_continue")) {
             DIALOG_CONTINUE = jsonObject.getInt("dialog_continue");
+        }
+        if (jsonObject.has("open_file")) {
+            OPEN_FILE = jsonObject.getInt("open_file");;
+        }
+        if (jsonObject.has("fullscreen")) {
+            FULLSCREEN = jsonObject.getInt("fullscreen");;
         }
     }
 

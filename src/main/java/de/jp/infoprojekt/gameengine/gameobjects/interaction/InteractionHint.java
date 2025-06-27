@@ -21,10 +21,9 @@ public class InteractionHint extends AbstractGameObject implements ScalingEvent,
     public InteractionHint(String hint) {
         this.hint = hint;
         ResourceManager.addScalingListener(this);
+        setDisableLocationFix(true);
 
-        offsetMax = (int) (20 * ResourceManager.getScaling().getY());
-        setSize(InteractionResource.INTERACTION_HINT.getWidth(), InteractionResource.INTERACTION_HINT.getHeight() + offsetMax);
-        repaint();
+        update();
     }
 
     @Override
@@ -37,29 +36,42 @@ public class InteractionHint extends AbstractGameObject implements ScalingEvent,
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        System.out.println((float) yOffset / offsetMax);
-
-        g.setColor(Color.GREEN);
-        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-
-        g.setColor(Color.RED);
-        g.drawRect(0, yOffset, getWidth() - 1, getHeight() - 1 - offsetMax);
-
         g.drawImage(InteractionResource.INTERACTION_HINT.getResource(), 0, yOffset, getWidth(), getHeight() - offsetMax, null);
 
         g.setFont(font.deriveFont((float) 30 * ResourceManager.getScaling().getX()));
         FontMetrics metrics = g.getFontMetrics(g.getFont());
 
         g.setColor(Color.BLACK);
-        g.drawString(hint, getWidth() / 2 - metrics.stringWidth(hint) / 2, getHeight() / 2 + metrics.getDescent() / 2 + yOffset);
+        g.drawString(hint, getWidth() / 2 - metrics.stringWidth(hint) / 2, getHeight() / 2 - metrics.getDescent() + yOffset);
     }
 
     @Override
     public void scale(float widthMultiply, float heightMultiply) {
-        offsetMax = (int) (20 * ResourceManager.getScaling().getY());
+        update();
+        super.scale(widthMultiply, heightMultiply);
+    }
 
+    private void update() {
+        offsetMax = (int) (30 * ResourceManager.getScaling().getY());
         setSize(InteractionResource.INTERACTION_HINT.getWidth(), InteractionResource.INTERACTION_HINT.getHeight() + offsetMax);
         repaint();
-        super.scale(widthMultiply, heightMultiply);
+    }
+
+    @Override
+    public Font getFont() {
+        return font;
+    }
+
+    @Override
+    public void setFont(Font font) {
+        this.font = font;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 }

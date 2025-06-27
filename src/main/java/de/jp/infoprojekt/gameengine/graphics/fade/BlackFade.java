@@ -1,5 +1,6 @@
 package de.jp.infoprojekt.gameengine.graphics.fade;
 
+import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.graphics.GameGraphics;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
 
@@ -7,8 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionAdapter;
 
 /**
  * BlackFade class
@@ -18,17 +17,19 @@ import java.awt.event.MouseMotionAdapter;
  */
 public class BlackFade extends AbstractFade {
 
+    private final GameEngine engine;
+
     private float alpha = 0f;
     private Timer timer;
     private boolean increment;
 
-    public BlackFade() {
+    public BlackFade(GameEngine engine) {
+        this.engine = engine;
         setOpaque(false);
 
-        //Disable inputs
-        //TODO disable via key / mouse manager
-        addMouseListener(new MouseAdapter() {});
-        addMouseMotionListener(new MouseMotionAdapter() {});
+        //OLD
+        //addMouseListener(new MouseAdapter() {});
+        //addMouseMotionListener(new MouseMotionAdapter() {});
         //setFocusTraversalKeysEnabled(false);
     }
 
@@ -46,6 +47,9 @@ public class BlackFade extends AbstractFade {
         increment = true;
         graphics.addFadeOverlay(this);
 
+        //Disable inputs
+        engine.getGameKeyHandler().setInputEnabled(false);
+
         timer = new Timer(20, e -> {
             alpha += increment ? 0.05f : -0.05f;
             if (alpha >= 1f) {
@@ -56,6 +60,8 @@ public class BlackFade extends AbstractFade {
             if (alpha <= 0f) {
                 timer.stop();
                 graphics.removeLayer(this);
+                //Enable inputs
+                engine.getGameKeyHandler().setInputEnabled(true);
             }
             repaint();
         });

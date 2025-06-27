@@ -1,12 +1,13 @@
-package de.jp.infoprojekt.gameengine.scenes;
+package de.jp.infoprojekt.gameengine.scenes.main;
 
-import de.jp.infoprojekt.resources.ResourceManager;
+import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
 import de.jp.infoprojekt.resources.scenes.TitleSceneResource;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
+//TODO rewrite
 public class TitleScene extends AbstractScene {
 
     public JButton exitButton = new JButton("Exit");

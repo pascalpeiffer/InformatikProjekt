@@ -1,15 +1,16 @@
-package de.jp.infoprojekt.gameengine.scenes;
+package de.jp.infoprojekt.gameengine.scenes.main;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
-import de.jp.infoprojekt.resources.scenes.SpawnSceneResource;
+import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
 import de.jp.infoprojekt.resources.scenes.TitleSceneResource;
 import de.jp.infoprojekt.settings.graphics.WindowTypeSetting;
-import de.jp.infoprojekt.resources.ResourceManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+
+//TODO rewrite
 
 /**
  * SettingsScene class

@@ -1,4 +1,4 @@
-package de.jp.infoprojekt.gameengine.graphics.popup;
+package de.jp.infoprojekt.gameengine.graphics.dialog;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
 
@@ -16,10 +16,14 @@ public class GameDialogManager {
         unsetDialog();
         this.currentDialog = dialog;
         engine.getGraphics().addDialogLayer(currentDialog);
+        engine.getTickProvider().registerTick(currentDialog);
+        currentDialog.onDialogShow();
     }
 
     public void unsetDialog() {
         if (currentDialog != null) {
+            currentDialog.onDialogHide();
+            engine.getTickProvider().unregisterTick(currentDialog);
             engine.getGraphics().removeLayer(currentDialog);
             currentDialog = null;
         }

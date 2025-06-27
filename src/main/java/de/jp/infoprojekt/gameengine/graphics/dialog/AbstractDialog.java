@@ -1,16 +1,18 @@
-package de.jp.infoprojekt.gameengine.graphics.popup;
+package de.jp.infoprojekt.gameengine.graphics.dialog;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
+import de.jp.infoprojekt.gameengine.tick.GameTick;
 import de.jp.infoprojekt.resources.ResourceManager;
 import de.jp.infoprojekt.resources.ScalingEvent;
-import de.jp.infoprojekt.resources.dialog.Dialog;
+import de.jp.infoprojekt.resources.dialog.DialogResource;
 import de.jp.infoprojekt.util.FontManager;
 import de.jp.infoprojekt.gameengine.graphics.render.TextRenderer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
-public abstract class AbstractDialog extends JComponent implements ScalingEvent {
+public abstract class AbstractDialog extends JComponent implements ScalingEvent, GameTick {
 
     private final GameEngine engine;
 
@@ -21,7 +23,9 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
     private boolean continueHintShown = false;
     private String continueHintText = "␣";
 
-    private boolean showOptions = false;
+    private boolean drawBaseImage = true;
+
+    private boolean optionsShown = false;
     private String optionAText = "";
     private String optionBText = "";
     private String optionAButtonText = "";
@@ -33,6 +37,14 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
     private Font titleFont = FontManager.JERSEY_10;
     private Font mainFont = FontManager.JERSEY_20;
 
+    private int typeDelay = 40;
+
+    private boolean continueDialogType = true;
+    private ContinueCallback continueCallback;
+    private OptionCallback optionCallback;
+
+    private int answerCooldown = 0;
+
     public AbstractDialog(GameEngine engine) {
         this.engine = engine;
         setFocusable(false);
@@ -41,21 +53,43 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
         setSizeAndLoc();
     }
 
-    public void show(int delay) {
-        show(delay, () -> {});
+    public void continueDialog(String title, String text, ContinueCallback callback) {
+        continueCallback = callback;
+        continueDialogType = true;
+        setTitle(title);
+        setDialog(text);
+        show();
+    }
+
+    public void optionsDialog(String title, String optionA, String optionB, OptionCallback callback) {
+        optionCallback = callback;
+        continueDialogType = false;
+        setTitle(title);
+        setDialog("");
+        setOptionAText(optionA);
+        setOptionBText(optionB);
+
+        setOptionAButtonText(KeyEvent.getKeyText(engine.getKeyMappingSettings().LEFT_KEY));
+        setOptionBButtonText(KeyEvent.getKeyText(engine.getKeyMappingSettings().RIGHT_KEY));
+
+        show();
+    }
+
+    public void show() {
+        show(() -> {});
     }
 
     private int renderIndex = 0;
     private Timer timer;
-    public void show(int delay, Runnable callback) {
+    public void show(Runnable callback) {
         resetShow();
-        timer = new Timer(delay, e -> {
+        timer = new Timer(typeDelay, e -> {
             if (renderIndex >= dialog.length()) {
                 new Thread(callback).start();
                 timer.stop();
             }
             renderIndex++;
-            Dialog.TYPING_SOUND.play(0.6f);
+            DialogResource.TYPING_SOUND.create().play();
             repaint();
         });
         timer.start();
@@ -68,6 +102,49 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
             timer = null;
         }
         renderIndex = 0;
+    }
+
+    public void onDialogShow() {}
+    public void onDialogHide() {}
+
+    @Override
+    public void tick(long currentTick) {
+        if (isFullyShown()) {
+            if (isContinueDialogType()) {
+                continueHintShown = true;
+                if (answerCooldown > 0) {
+                    answerCooldown--;
+                    return;
+                }
+                if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().DIALOG_CONTINUE)) {
+                    continueCallback.callback();
+                }
+            }else {
+                optionsShown = true;
+                if (answerCooldown > 0) {
+                    answerCooldown--;
+                    return;
+                }
+                if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().LEFT_KEY)) {
+                    optionCallback.callback(true);
+                }else if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().RIGHT_KEY)) {
+                    optionCallback.callback(false);
+                }
+            }
+        }else {
+            continueHintShown = false;
+            optionsShown = false;
+        }
+    }
+
+    public void dispose() {
+        SwingUtilities.invokeLater(() -> {
+            engine.getDialogManager().unsetDialog();
+        });
+    }
+
+    public void setAnswerCooldown(int answerCooldown) {
+        this.answerCooldown = answerCooldown;
     }
 
     public boolean isFullyShown() {
@@ -89,11 +166,9 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        //TODO debug mode?
-        //g.setColor(Color.GREEN);
-        //g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-
-        g.drawImage(Dialog.DIALOG.getResource(), 0, 0, getWidth(), (int) (getHeight() - (ResourceManager.getGameScreenHeight() / bottomSeparateDivider)), null);
+        if (drawBaseImage) {
+            g.drawImage(DialogResource.DIALOG.getResource(), 0, 0, getWidth(), (int) (getHeight() - (ResourceManager.getGameScreenHeight() / bottomSeparateDivider)), null);
+        }
 
         //Draw Title
         Font f = titleFont.deriveFont(50 * ResourceManager.getScaling().getX());
@@ -103,15 +178,15 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
         g.setColor(Color.WHITE);
         g.drawString(title, getWidth() / 2 - metrics.stringWidth(title) / 2, metrics.getHeight());
 
-        if (!isShowOptions()) {
+        if (!isOptionsShown()) {
             drawMainText(g, metrics);
         }
 
-        if (isContinueHintShown() && !isShowOptions()) {
+        if (isContinueHintShown() && !isOptionsShown()) {
             drawContinueHint(g);
         }
 
-        if (isShowOptions()) {
+        if (isOptionsShown()) {
             drawOptions(g);
         }
     }
@@ -126,11 +201,11 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
         int answerHeightBottomDistance = answerHeight / 2;
 
         //Option A
-        g.drawImage(Dialog.DIALOG.getResource(), getWidth() / 4 - answerWidth / 2, getHeight() - answerHeight - answerHeightBottomDistance, answerWidth, answerHeight, null);
+        g.drawImage(DialogResource.DIALOG.getResource(), getWidth() / 4 - answerWidth / 2, getHeight() - answerHeight - answerHeightBottomDistance, answerWidth, answerHeight, null);
         TextRenderer.drawFormattedString(g, getOptionAText(), getWidth() / 4 - optionsWidth / 2, getHeight() - optionsHeight - optionsHeightBottomDistance, optionsWidth, optionsHeight,mainFont.deriveFont((float) 25 * ResourceManager.getScaling().getX()), Integer.MAX_VALUE);
 
         //Option B
-        g.drawImage(Dialog.DIALOG.getResource(), getWidth() / 4 * 3 - answerWidth / 2, getHeight() - answerHeight - answerHeightBottomDistance, answerWidth, answerHeight, null);
+        g.drawImage(DialogResource.DIALOG.getResource(), getWidth() / 4 * 3 - answerWidth / 2, getHeight() - answerHeight - answerHeightBottomDistance, answerWidth, answerHeight, null);
         TextRenderer.drawFormattedString(g, getOptionBText(), getWidth() / 4 * 3 - optionsWidth / 2, getHeight() - optionsHeight - optionsHeightBottomDistance, optionsWidth, optionsHeight,mainFont.deriveFont((float) 25 * ResourceManager.getScaling().getX()), Integer.MAX_VALUE);
 
         g.setColor(Color.WHITE);
@@ -153,7 +228,7 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
 
         int continueHintBottomDistance = continueHintHeight / 2;
 
-        g.drawImage(Dialog.DIALOG.getResource(), getWidth() / 2 - continueHintWidth / 2, getHeight() - continueHintHeight - continueHintBottomDistance, continueHintWidth, continueHintHeight, null);
+        g.drawImage(DialogResource.DIALOG.getResource(), getWidth() / 2 - continueHintWidth / 2, getHeight() - continueHintHeight - continueHintBottomDistance, continueHintWidth, continueHintHeight, null);
 
         //Font continueHintFont = mainFont.deriveFont((float) 30 * ResourceManager.getScaling().getX());
         //g.setFont(continueHintFont);
@@ -172,12 +247,16 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
         this.dialog = dialog;
     }
 
-    public boolean isShowOptions() {
-        return showOptions;
+    public boolean isContinueDialogType() {
+        return continueDialogType;
     }
 
-    public void setShowOptions(boolean showOptions) {
-        this.showOptions = showOptions;
+    public boolean isOptionsShown() {
+        return optionsShown;
+    }
+
+    public void setOptionsShown(boolean optionsShown) {
+        this.optionsShown = optionsShown;
         repaint();
     }
 
@@ -255,5 +334,21 @@ public abstract class AbstractDialog extends JComponent implements ScalingEvent 
 
     public String getOptionBButtonText() {
         return optionBButtonText;
+    }
+
+    public void setDrawBaseImage(boolean drawBaseImage) {
+        this.drawBaseImage = drawBaseImage;
+    }
+
+    public int getTypeDelay() {
+        return typeDelay;
+    }
+
+    public void setTypeDelay(int typeDelay) {
+        this.typeDelay = typeDelay;
+    }
+
+    public int getAnswerCooldown() {
+        return answerCooldown;
     }
 }

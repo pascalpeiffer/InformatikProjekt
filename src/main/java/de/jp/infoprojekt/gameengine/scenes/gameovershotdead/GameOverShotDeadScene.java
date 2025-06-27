@@ -12,7 +12,7 @@ public class GameOverShotDeadScene extends AbstractScene {
 
     public GameOverShotDeadScene() {
         setLayout(null);
-        GameOverShotDeadSceneResource.GAME_OVER.play();
+        GameOverShotDeadSceneResource.GAME_OVER.create().play();
     }
 
     @Override

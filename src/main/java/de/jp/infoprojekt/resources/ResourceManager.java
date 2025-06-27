@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableFloatValue;
 import javafx.beans.value.ObservableValue;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,16 +18,31 @@ public class ResourceManager {
 
     public static GameResource MAIN_LOGO = new GameResource("/GameLogo.png");
 
-
     private static ObjectProperty<FloatPair> scaling = new SimpleObjectProperty<>(new FloatPair(1.0f, 1.0f)); // Width / Height -> default 1920x1080//Scaling from 1080px
 
     private static List<ScalingEvent> eventListener = new ArrayList<>();
+
+    private static Line audioLine;
 
     static {
         ChangeListener<FloatPair> changeListener = (observable, oldValue, newValue) ->
             eventListener.forEach(scalingEvent -> scalingEvent.scale(newValue.getY(), newValue.getY()));
 
         scaling.addListener(changeListener);
+
+        //Get default audio device
+        AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
+                AudioSystem.NOT_SPECIFIED,
+                16, 2, 4,
+                AudioSystem.NOT_SPECIFIED, true);
+        DataLine.Info info = new DataLine.Info(Clip.class, format);
+
+        try {
+            audioLine = AudioSystem.getLine(info);
+        } catch (LineUnavailableException e) {
+            System.out.println("Could not find audio device");
+            throw new RuntimeException(e);
+        }
     }
 
     public static void addScalingListener(ScalingEvent event) {
@@ -51,5 +67,9 @@ public class ResourceManager {
 
     public static int getGameScreenHeight() {
         return (int) (getScaling().getY() * 1080);
+    }
+
+    public static Line getAudioLine() {
+        return audioLine;
     }
 }
