@@ -8,10 +8,11 @@ import java.awt.*;
 
 public class GameOverShotDeadScene extends AbstractScene {
 
-    private GameResource background = GameOverShotDeadSceneResource.BACKGROUND;
+    private final GameResource background = GameOverShotDeadSceneResource.BACKGROUND;
 
     public GameOverShotDeadScene() {
         setLayout(null);
+        GameOverShotDeadSceneResource.GAME_OVER.play();
     }
 
     @Override

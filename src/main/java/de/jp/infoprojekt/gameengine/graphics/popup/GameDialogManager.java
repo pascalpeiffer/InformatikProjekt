@@ -25,4 +25,7 @@ public class GameDialogManager {
         }
     }
 
+    public AbstractDialog getCurrentDialog() {
+        return currentDialog;
+    }
 }

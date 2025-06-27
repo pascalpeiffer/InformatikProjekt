@@ -3,8 +3,10 @@ package de.jp.infoprojekt.gameengine;
 import de.jp.infoprojekt.gameengine.graphics.GameGraphics;
 import de.jp.infoprojekt.gameengine.graphics.popup.GameDialogManager;
 import de.jp.infoprojekt.gameengine.state.GameStateManager;
+import de.jp.infoprojekt.settings.SettingManager;
 import de.jp.infoprojekt.settings.graphics.WindowTypeSetting;
-import de.jp.infoprojekt.util.GameTickProvider;
+import de.jp.infoprojekt.settings.key.KeyMappingSettings;
+import de.jp.infoprojekt.gameengine.tick.GameTickProvider;
 import de.jp.infoprojekt.io.key.GameKeyHandler;
 
 import java.awt.event.KeyEvent;
@@ -23,7 +25,10 @@ public class GameEngine {
     private GameTickProvider tickProvider;
     private GameDialogManager dialogManager;
 
+    private final KeyMappingSettings keyMappingSettings;
+
     public GameEngine() {
+        keyMappingSettings = (KeyMappingSettings) SettingManager.getInstance().getSetting(KeyMappingSettings.class);
         tickProvider = new GameTickProvider(100); //Ticks per second
         graphics = new GameGraphics(this);
         dialogManager = new GameDialogManager(this);
@@ -63,5 +68,9 @@ public class GameEngine {
 
     public GameDialogManager getDialogManager() {
         return dialogManager;
+    }
+
+    public KeyMappingSettings getKeyMappingSettings() {
+        return keyMappingSettings;
     }
 }

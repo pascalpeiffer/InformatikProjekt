@@ -57,7 +57,6 @@ public abstract class AbstractGameObject extends JComponent implements ScalingEv
     @Override
     public void scale(float widthMultiply, float heightMultiply) {
         applyLocation();
-        repaint();
     }
 
 
@@ -68,5 +67,6 @@ public abstract class AbstractGameObject extends JComponent implements ScalingEv
         x = x - getWidth() / 2;
         y = y - getHeight();
         setLocation(x, y);
+        repaint();
     }
 }

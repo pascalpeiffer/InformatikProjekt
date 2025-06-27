@@ -6,4 +6,6 @@ public abstract class AbstractScene extends JPanel {
 
     public void sceneShown() {};
 
+    public void sceneHidden() {};
+
 }

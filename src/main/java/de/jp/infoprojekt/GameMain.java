@@ -36,14 +36,6 @@ public class GameMain {
         //Add shutdown hook
         Runtime.getRuntime().addShutdownHook(new Thread(() -> SettingManager.getInstance().saveSettingsToFile()));
 
-        //Load image resources
-        try {
-            ResourceManager.loadImageResources();
-        } catch (IOException ignored) {
-            System.err.println("Failed to load image resources!");
-            System.exit(-1);
-        }
-
         //Start the game
         gameEngine = new GameEngine();
         gameEngine.start();

@@ -1,6 +1,8 @@
 package de.jp.infoprojekt.gameengine.scenes;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
+import de.jp.infoprojekt.resources.scenes.SpawnSceneResource;
+import de.jp.infoprojekt.resources.scenes.TitleSceneResource;
 import de.jp.infoprojekt.settings.graphics.WindowTypeSetting;
 import de.jp.infoprojekt.resources.ResourceManager;
 
@@ -162,7 +164,7 @@ public class SettingsScene extends AbstractScene {
 
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
-        g2d.drawImage(ResourceManager.TITLE_SCENE_BACKGROUND, 0, 0, getWidth(), getHeight(), null);
+        g2d.drawImage(TitleSceneResource.TITLE_SCREEN.getResource(), 0, 0, getWidth(), getHeight(), null);
         g2d.dispose();
     }
 

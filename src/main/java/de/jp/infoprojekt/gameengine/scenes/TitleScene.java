@@ -1,6 +1,7 @@
 package de.jp.infoprojekt.gameengine.scenes;
 
 import de.jp.infoprojekt.resources.ResourceManager;
+import de.jp.infoprojekt.resources.scenes.TitleSceneResource;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -34,7 +35,7 @@ public class TitleScene extends AbstractScene {
 
         exitButton.setBounds(getWidth() / 2 - 100, getHeight() - 150, 200, 50);
 
-        g.drawImage(ResourceManager.TITLE_SCENE_BACKGROUND, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(TitleSceneResource.TITLE_SCREEN.getResource(), 0, 0, getWidth(), getHeight(), null);
 
 
         //g.setColor(Color.RED);

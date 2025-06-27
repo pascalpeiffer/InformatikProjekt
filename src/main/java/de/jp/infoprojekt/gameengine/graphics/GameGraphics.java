@@ -2,12 +2,8 @@ package de.jp.infoprojekt.gameengine.graphics;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.graphics.fade.AbstractFade;
-import de.jp.infoprojekt.gameengine.graphics.fade.BlackFade;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
-import de.jp.infoprojekt.gameengine.scenes.TitleScene;
-import de.jp.infoprojekt.gameengine.scenes.gameovershotdead.GameOverShotDeadScene;
 import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
-import de.jp.infoprojekt.io.key.GameKeyHandler;
 import de.jp.infoprojekt.settings.SettingManager;
 import de.jp.infoprojekt.settings.graphics.GraphicSettings;
 import de.jp.infoprojekt.resources.ResourceManager;
@@ -15,9 +11,6 @@ import de.jp.infoprojekt.util.FloatPair;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +41,9 @@ public class GameGraphics {
 
         updateWindowType();
 
-        frame.setIconImage(ResourceManager.TITLE_SCENE_BACKGROUND);
+        frame.setFocusTraversalKeysEnabled(false);
+
+        frame.setIconImage(ResourceManager.MAIN_LOGO.getResource());
         frame.setTitle("Mission Takedown");
 
         addUpdateEvent();
@@ -57,7 +52,7 @@ public class GameGraphics {
     private void addUpdateEvent() {
         final Dimension[] oldDim = {new Dimension(0, 0)};
         final int[] tickIndex = {0};
-        gameEngine.getTickProvider().onTick(() -> {
+        gameEngine.getTickProvider().registerTick(currentTick -> {
             if (tickIndex[0] >= 10) {
                 Dimension currentSize = frame.getSize();
                 if (!currentSize.equals(oldDim[0])) {
@@ -97,6 +92,10 @@ public class GameGraphics {
     }
 
     public void switchToScene(AbstractScene scene) {
+        if (currentScene != null) {
+            currentScene.sceneHidden();
+        }
+
         currentScene = scene;
         int width = getFrame().getWidth() - getFrame().getInsets().left - getFrame().getInsets().right;
         int height = getFrame().getHeight() - getFrame().getInsets().top - getFrame().getInsets().bottom;
@@ -120,6 +119,7 @@ public class GameGraphics {
 
     public void removeLayer(Component component) {
         frame.getLayeredPane().remove(component);
+        frame.repaint();
     }
 
     public JFrame getFrame() {
@@ -180,5 +180,9 @@ public class GameGraphics {
 
     public GraphicSettings getSettings() {
         return settings;
+    }
+
+    public AbstractScene getCurrentScene() {
+        return currentScene;
     }
 }

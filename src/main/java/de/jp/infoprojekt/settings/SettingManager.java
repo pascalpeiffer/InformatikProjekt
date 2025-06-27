@@ -4,6 +4,7 @@ import com.sun.istack.internal.Nullable;
 import de.jp.infoprojekt.io.file.FileManager;
 import de.jp.infoprojekt.serializable.Serializable;
 import de.jp.infoprojekt.settings.graphics.GraphicSettings;
+import de.jp.infoprojekt.settings.key.KeyMappingSettings;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +29,7 @@ public class SettingManager implements Serializable {
 
     private void addSettings() {
         settings.add(new GraphicSettings());
+        settings.add(new KeyMappingSettings());
     }
 
     public boolean loadSettingsFromFile() {

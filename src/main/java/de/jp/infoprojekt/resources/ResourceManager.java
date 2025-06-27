@@ -15,14 +15,8 @@ import java.util.Objects;
 
 public class ResourceManager {
 
-    public static BufferedImage TITLE_SCENE_BACKGROUND;
+    public static GameResource MAIN_LOGO = new GameResource("/GameLogo.png");
 
-    //Scenes
-
-    public static void loadImageResources() throws IOException {
-        TITLE_SCENE_BACKGROUND = ImageIO.read(Objects.requireNonNull(ResourceManager.class.getResource("/scenes/title/titleSceneBackground.png")));
-
-    }
 
     private static ObjectProperty<FloatPair> scaling = new SimpleObjectProperty<>(new FloatPair(1.0f, 1.0f)); // Width / Height -> default 1920x1080//Scaling from 1080px
 
