@@ -1,48 +1,43 @@
 package de.jp.infoprojekt.gameengine.gameobjects.interaction;
 
 import de.jp.infoprojekt.gameengine.gameobjects.AbstractGameObject;
-import de.jp.infoprojekt.gameengine.tick.GameTick;
+import de.jp.infoprojekt.gameengine.graphics.render.TextRenderer;
 import de.jp.infoprojekt.resources.ResourceManager;
 import de.jp.infoprojekt.resources.ScalingEvent;
-import de.jp.infoprojekt.resources.interaction.InteractionResource;
+import de.jp.infoprojekt.resources.dialog.DialogResource;
 import de.jp.infoprojekt.util.FontManager;
 
 import java.awt.*;
 
-public class InteractionHint extends AbstractGameObject implements ScalingEvent, GameTick {
+public class InteractionHint extends AbstractGameObject implements ScalingEvent {
 
     private String hint;
 
-    private Font font = FontManager.JERSEY_20;
-
-    private int yOffset;
-    private int offsetMax;
+    private Font font = FontManager.JERSEY_10;
 
     public InteractionHint(String hint) {
         this.hint = hint;
-        ResourceManager.addScalingListener(this);
         setDisableLocationFix(true);
+        setRelativeLocation(0, 0);
 
         update();
-    }
-
-    @Override
-    public void tick(long currentTick) {
-        yOffset = (int) (offsetMax * (Math.sin((double) currentTick / 40) + 1) / 2);
-        repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.drawImage(InteractionResource.INTERACTION_HINT.getResource(), 0, yOffset, getWidth(), getHeight() - offsetMax, null);
+        int interactionHintWidth = getWidth() / 6;
+        int interactionHintHeight = getHeight() / 15;
 
-        g.setFont(font.deriveFont((float) 30 * ResourceManager.getScaling().getX()));
-        FontMetrics metrics = g.getFontMetrics(g.getFont());
+        int interactionHintBottomDistance = interactionHintHeight / 2;
 
-        g.setColor(Color.BLACK);
-        g.drawString(hint, getWidth() / 2 - metrics.stringWidth(hint) / 2, getHeight() / 2 - metrics.getDescent() + yOffset);
+        g.drawImage(DialogResource.DIALOG.getResource(), getWidth() / 2 - interactionHintWidth / 2, getHeight() - interactionHintHeight - interactionHintBottomDistance, interactionHintWidth, interactionHintHeight, null);
+
+        Font f = font.deriveFont(40 * ResourceManager.getScaling().getX());
+        FontMetrics metrics = g.getFontMetrics(f);
+
+        TextRenderer.drawFormattedString(g, hint, getWidth() / 2 - metrics.stringWidth(hint) / 2, getHeight() - interactionHintHeight + metrics.getDescent(), 300, 300, f, Integer.MAX_VALUE);
     }
 
     @Override
@@ -52,8 +47,7 @@ public class InteractionHint extends AbstractGameObject implements ScalingEvent,
     }
 
     private void update() {
-        offsetMax = (int) (30 * ResourceManager.getScaling().getY());
-        setSize(InteractionResource.INTERACTION_HINT.getWidth(), InteractionResource.INTERACTION_HINT.getHeight() + offsetMax);
+        setSize(ResourceManager.getGameScreenWidth(), ResourceManager.getGameScreenHeight());
         repaint();
     }
 

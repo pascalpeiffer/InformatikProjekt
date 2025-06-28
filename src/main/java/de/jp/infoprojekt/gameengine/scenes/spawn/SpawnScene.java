@@ -3,13 +3,18 @@ package de.jp.infoprojekt.gameengine.scenes.spawn;
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.dialog.spawn.IntroductionCallDialog;
 import de.jp.infoprojekt.gameengine.gameobjects.interaction.MissionTakeDownFile;
-import de.jp.infoprojekt.gameengine.gameobjects.money.MoneyOverlay;
+import de.jp.infoprojekt.gameengine.gameobjects.overlay.MoneyOverlay;
+import de.jp.infoprojekt.gameengine.gameobjects.overlay.QuestOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.player.PlayerCharacter;
 import de.jp.infoprojekt.gameengine.gameobjects.interaction.InteractionHint;
+import de.jp.infoprojekt.gameengine.graphics.fade.BlackFade;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
+import de.jp.infoprojekt.gameengine.scenes.farmer.FarmerScene;
 import de.jp.infoprojekt.gameengine.scenes.gameovershotdead.GameOverShotDeadScene;
+import de.jp.infoprojekt.gameengine.scenes.travel.TravelScene;
 import de.jp.infoprojekt.gameengine.scenes.util.ColorScene;
 import de.jp.infoprojekt.gameengine.state.GameState;
+import de.jp.infoprojekt.gameengine.state.QuestState;
 import de.jp.infoprojekt.gameengine.tick.GameTick;
 import de.jp.infoprojekt.resources.GameAudioResource;
 import de.jp.infoprojekt.resources.GameResource;
@@ -39,6 +44,8 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
     private MissionTakeDownFile missionTakedownFile;
     private PlayerCharacter player;
     private InteractionHint phoneInteractionHint;
+    private InteractionHint computerInteractionHint;
+    private InteractionHint doorInteractionHint;
 
     public SpawnScene(GameEngine engine) {
         this.engine = engine;
@@ -47,28 +54,52 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
         initGameObjects();
 
         ResourceManager.addScalingListener(this);
+
+
+        //TODO TEMP
+        if (engine.getStateManager().getState().getId() == GameState.GAME_INTRODUCED.getId()) {
+            engine.getStateManager().setQuest(QuestState.USE_COMPUTER);
+        }
     }
 
     // -- INITIALIZE --
 
     private void initGameObjects() { //Order matters! -> the top on is on top (huh!?)
         initMissionTakedownFile();
+        initQuestOverlay();
         initMoneyOverlay();
-        initPlayer();
+        initDoorInteractionHint();
+        initComputerInteractionHint();
         initPhoneInteractionHint();
+        initPlayer();
+    }
+
+    private void initQuestOverlay() {
+        QuestOverlay questOverlay = new QuestOverlay(engine);
+        add(questOverlay);
+    }
+
+    private void initDoorInteractionHint() {
+        doorInteractionHint = new InteractionHint("Door" +" (" + KeyEvent.getKeyText(engine.getKeyMappingSettings().INTERACT) + ")");
+        doorInteractionHint.setVisible(false);
+        add(doorInteractionHint);
+    }
+
+    private void initComputerInteractionHint() {
+        computerInteractionHint = new InteractionHint("Computer" +" (" + KeyEvent.getKeyText(engine.getKeyMappingSettings().INTERACT) + ")");
+        computerInteractionHint.setVisible(false);
+        add(computerInteractionHint);
     }
 
     private void initPhoneInteractionHint() {
-        phoneInteractionHint = new InteractionHint(KeyEvent.getKeyText(engine.getKeyMappingSettings().INTERACT));
-        phoneInteractionHint.setRelativeLocation(new FloatPoint(0.9f, 0.5f));
-        engine.getTickProvider().registerTick(phoneInteractionHint);
+        phoneInteractionHint = new InteractionHint("Telfon" +" (" + KeyEvent.getKeyText(engine.getKeyMappingSettings().INTERACT) + ")");
         phoneInteractionHint.setVisible(false);
         add(phoneInteractionHint);
     }
 
     private void initMoneyOverlay() {
         moneyOverlay = new MoneyOverlay(engine);
-        if (engine.getStateManager().getState().getId() < 10) {
+        if (engine.getStateManager().getState().getId() < GameState.GAME_INTRODUCED.getId()) {
             moneyOverlay.setVisible(false);
         }
         add(moneyOverlay);
@@ -99,6 +130,26 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
         doorTick(player.getRGBOnBlockArea() == Color.GREEN.getRGB());
         missionFileTick();
         missionRefuseTick();
+        computerTick(player.getRGBOnBlockArea() == Color.BLUE.getRGB());
+    }
+
+    private void computerTick(boolean isPlayerNearby) {
+        if (isPlayerNearby) {
+
+            if (engine.getStateManager().getState().getId() >= GameState.GAME_INTRODUCED.getId()) {
+                computerInteractionHint.setVisible(true);
+
+                if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+                    engine.getGraphics().switchToScene(new ComputerScene(engine, player.getRelativeLocation()), new BlackFade(engine));
+                }
+
+            }else {
+                computerInteractionHint.setVisible(false);
+            }
+
+        }else {
+            computerInteractionHint.setVisible(false);
+        }
     }
 
     private void missionFileTick() {
@@ -121,25 +172,45 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
     }
 
     private void doorTick(boolean isPlayerNearby) {
+        boolean intHint = false;
+
         if (engine.getStateManager().getState() == GameState.MISSION_REFUSED_DOOR_KNOCKED && isPlayerNearby) {
             if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
                 engine.getStateManager().setState(GameState.MISSION_REFUSED_DOOR_ANSWERED);
             }
         }
+
+        if (engine.getStateManager().getState() == GameState.GO_TO_FARMER && isPlayerNearby) {
+            intHint = true;
+            if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+                intHint = false;
+                //Goto Farmer
+                engine.getGraphics().switchToScene(new TravelScene(engine, true, 10, () -> {
+                    engine.getGraphics().switchToScene(new FarmerScene(engine));
+                }), new BlackFade(engine));
+            }
+        }
+
+        doorInteractionHint.setVisible(isPlayerNearby && intHint);
     }
 
     private int introductionPhoneCallCooldown = 0;
     private GameAudioResource.Instance currentCallAudio;
     private void phoneTick(boolean isPlayerNearby) {
+
+        if (isPlayerNearby && currentCallAudio != null && currentCallAudio.isActive()) {
+            phoneInteractionHint.setVisible(true);
+        }else {
+            phoneInteractionHint.setVisible(false);
+        }
+
         if (engine.getStateManager().getState() == GameState.GAME_ENTRY && introductionPhoneCallCooldown <= 0) {
             engine.getStateManager().setState(GameState.INTRODUCTION_CALLING);
-            phoneInteractionHint.setVisible(true);
 
             currentCallAudio = SpawnSceneResource.PHONE.create().setPan(0.5f).onEnd(() -> {
                 if (engine.getStateManager().getState() == GameState.INTRODUCTION_CALLING) {
                     introductionPhoneCallCooldown = engine.getTickProvider().getTicksPerSecond() * 15;
                     engine.getStateManager().setState(GameState.GAME_ENTRY);
-                    phoneInteractionHint.setVisible(false);
                 }
             }).play();
 
@@ -150,7 +221,6 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
 
         if (isPlayerNearby && engine.getStateManager().getState() == GameState.INTRODUCTION_CALLING && engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
             engine.getStateManager().setState(GameState.INTRODUCTION_CALL);
-            phoneInteractionHint.setVisible(false);
             if (currentCallAudio != null && currentCallAudio.isActive()) {
                 currentCallAudio.stop();
             }
@@ -254,7 +324,11 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(spawnBackground.getResource(), 0, 0, getWidth(), getHeight(), null);
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.drawImage(spawnBackground.getResource(), 0, 0, getWidth(), getHeight(), null);
+
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+        g2d.drawImage(SpawnSceneResource.PLAYER_SPACE.getResource(), 0, 0, getWidth(), getHeight(), null);
     }
 
     @Override

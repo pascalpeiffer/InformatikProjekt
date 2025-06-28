@@ -1,6 +1,5 @@
 package de.jp.infoprojekt.settings;
 
-import com.sun.istack.internal.Nullable;
 import de.jp.infoprojekt.io.file.FileManager;
 import de.jp.infoprojekt.serializable.Serializable;
 import de.jp.infoprojekt.settings.graphics.GraphicSettings;
@@ -70,7 +69,6 @@ public class SettingManager implements Serializable {
         }
     }
 
-    @Nullable
     public AbstractSettings getSetting(Class<?> clazz) {
         for (AbstractSettings setting : settings) {
             if (setting.getClass().equals(clazz)) {

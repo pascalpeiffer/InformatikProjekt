@@ -2,6 +2,9 @@ package de.jp.infoprojekt.gameengine;
 
 import de.jp.infoprojekt.gameengine.graphics.GameGraphics;
 import de.jp.infoprojekt.gameengine.graphics.dialog.GameDialogManager;
+import de.jp.infoprojekt.gameengine.scenes.gameovershotdead.GameOverShotDeadScene;
+import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
+import de.jp.infoprojekt.gameengine.scenes.travel.TravelScene;
 import de.jp.infoprojekt.gameengine.state.GameStateManager;
 import de.jp.infoprojekt.settings.SettingManager;
 import de.jp.infoprojekt.settings.graphics.WindowTypeSetting;
@@ -39,6 +42,7 @@ public class GameEngine {
 
     public void start() {
         graphics.start();
+        graphics.switchToScene(new SpawnScene(this));
         addFullscreenKey();
     }
 
@@ -52,6 +56,7 @@ public class GameEngine {
                 graphics.updateWindowType();
             }else if (graphics.getSettings().getCurrentWindowSetting() == WindowTypeSetting.FULLSCREEN) {
                 graphics.getSettings().setCurrentWindowSetting(WindowTypeSetting.WINDOWED_FULLSCREEN);
+                graphics.updateWindowType();
             }
         });
     }

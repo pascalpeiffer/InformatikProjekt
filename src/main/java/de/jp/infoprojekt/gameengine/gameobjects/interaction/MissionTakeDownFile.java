@@ -10,7 +10,6 @@ import java.awt.*;
 public class MissionTakeDownFile extends AbstractGameObject implements ScalingEvent {
 
     public MissionTakeDownFile() {
-        ResourceManager.addScalingListener(this);
         setSize(InteractionResource.MISSION_TAKEDOWN_FILE.getWidth(), InteractionResource.MISSION_TAKEDOWN_FILE.getHeight());
         repaint();
     }

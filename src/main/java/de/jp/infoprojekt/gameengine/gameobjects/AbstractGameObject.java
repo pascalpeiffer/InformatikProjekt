@@ -2,9 +2,14 @@ package de.jp.infoprojekt.gameengine.gameobjects;
 
 import de.jp.infoprojekt.resources.ResourceManager;
 import de.jp.infoprojekt.resources.ScalingEvent;
+import de.jp.infoprojekt.resources.scenes.ComputerSceneResource;
 import de.jp.infoprojekt.util.FloatPoint;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * AbstractGameObject class
@@ -18,9 +23,23 @@ public abstract class AbstractGameObject extends JComponent implements ScalingEv
     private float relativeY;
 
     private boolean disableLocationFix = false;
+    private boolean disableBoundRelative = false;
+
+    private List<Runnable> clickRunnables = new ArrayList<>();
 
     public AbstractGameObject() {
         ResourceManager.addScalingListener(this);
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                clickRunnables.forEach(Runnable::run);
+            }
+        });
+    }
+
+    public void onClick(Runnable runnable) {
+        clickRunnables.add(runnable);
     }
 
     public void setRelativeLocation(float relativeX, float relativeY) {
@@ -41,6 +60,10 @@ public abstract class AbstractGameObject extends JComponent implements ScalingEv
         return relativeY;
     }
 
+    public FloatPoint getRelativeLocation() {
+        return new FloatPoint(getRelativeX(), getRelativeY());
+    }
+
     public void setRelativeX(float relativeX) {
         this.relativeX = relativeX;
         applyLocation();
@@ -52,6 +75,9 @@ public abstract class AbstractGameObject extends JComponent implements ScalingEv
     }
 
     private void boundRelative() {
+        if (disableBoundRelative) {
+            return;
+        }
         relativeX = Math.max(0, Math.min(1, relativeX));
         relativeY = Math.max(0, Math.min(1, relativeY));
     }
@@ -82,5 +108,13 @@ public abstract class AbstractGameObject extends JComponent implements ScalingEv
 
     public boolean isDisableLocationFix() {
         return disableLocationFix;
+    }
+
+    public boolean isDisableBoundRelative() {
+        return disableBoundRelative;
+    }
+
+    public void setDisableBoundRelative(boolean disableBoundRelative) {
+        this.disableBoundRelative = disableBoundRelative;
     }
 }

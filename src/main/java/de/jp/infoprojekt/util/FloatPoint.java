@@ -27,4 +27,9 @@ public class FloatPoint {
     public void setY(float y) {
         this.y = y;
     }
+
+    @Override
+    public String toString() {
+        return "FloatPoint X: " + getX() + " Y: " + getY();
+    }
 }

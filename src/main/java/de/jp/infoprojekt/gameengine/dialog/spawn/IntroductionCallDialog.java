@@ -5,6 +5,7 @@ import de.jp.infoprojekt.gameengine.graphics.dialog.AbstractDialog;
 import de.jp.infoprojekt.gameengine.graphics.dialog.ContinueCallback;
 import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
 import de.jp.infoprojekt.gameengine.state.GameState;
+import de.jp.infoprojekt.gameengine.state.QuestState;
 import de.jp.infoprojekt.resources.interaction.InteractionResource;
 import de.jp.infoprojekt.resources.scenes.SpawnSceneResource;
 
@@ -39,6 +40,7 @@ public class IntroductionCallDialog extends AbstractDialog {
                                                 continueDialog("Eagle:", "Ich verstehe, ich melde mich.", () -> {
                                                     continueDialog("Mr. G:", "G out.", () -> {
                                                         engine.getStateManager().setState(GameState.GAME_INTRODUCED);
+                                                        engine.getStateManager().setQuest(QuestState.USE_COMPUTER);
                                                         spawnScene.getMoneyOverlay().setVisible(true);
                                                         exitDialog();
                                                     });
@@ -66,6 +68,7 @@ public class IntroductionCallDialog extends AbstractDialog {
                                 missionFileDialog(() -> {
                                     continueDialog("Eagle:", "Danke Mr. G Ich werde mich melden, wenn die Mission erfüllt ist. Eagle out.", () -> {
                                         engine.getStateManager().setState(GameState.GAME_INTRODUCED);
+                                        engine.getStateManager().setQuest(QuestState.USE_COMPUTER);
                                         spawnScene.getMoneyOverlay().setVisible(true);
                                         exitDialog();
                                     });

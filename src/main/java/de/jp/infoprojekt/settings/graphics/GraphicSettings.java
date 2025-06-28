@@ -13,7 +13,7 @@ import java.awt.*;
  */
 public class GraphicSettings extends AbstractSettings {
 
-    private WindowTypeSetting WINDOW_SETTING = WindowTypeSetting.FULLSCREEN;
+    private WindowTypeSetting WINDOW_SETTING = WindowTypeSetting.WINDOWED_FULLSCREEN;
 
     private String SELECTED_DISPLAY;
 

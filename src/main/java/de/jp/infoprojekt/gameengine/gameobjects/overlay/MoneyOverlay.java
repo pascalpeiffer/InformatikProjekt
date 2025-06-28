@@ -1,4 +1,4 @@
-package de.jp.infoprojekt.gameengine.gameobjects.money;
+package de.jp.infoprojekt.gameengine.gameobjects.overlay;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.gameobjects.AbstractGameObject;
@@ -23,7 +23,6 @@ public class MoneyOverlay extends AbstractGameObject implements ScalingEvent {
     public MoneyOverlay(GameEngine engine) {
         this.engine = engine;
         setDisableLocationFix(true);
-        ResourceManager.addScalingListener(this);
         setRelativeLocation(new FloatPoint(0f, 0.01f));
         updateSize();
 

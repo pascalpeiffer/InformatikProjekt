@@ -12,7 +12,16 @@ public enum GameState {
     MISSION_REFUSED_DOOR_ANSWERED(9),
     GAME_OVER(10),
 
-    GAME_INTRODUCED(11);
+    GAME_INTRODUCED(11),
+    CHOOSING_RECIPE(12),
+
+    FIRST_NITRIC_ACID(13),
+    CLICKED_SALPETER_HYPERLINK(14),
+
+
+    GO_TO_FARMER(16),
+
+    FIRST_SULFURIC_ACID(40);
 
     private final int id;
 

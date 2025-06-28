@@ -3,7 +3,6 @@ package de.jp.infoprojekt.gameengine.graphics;
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.graphics.fade.AbstractFade;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
-import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
 import de.jp.infoprojekt.settings.SettingManager;
 import de.jp.infoprojekt.settings.graphics.GraphicSettings;
 import de.jp.infoprojekt.resources.ResourceManager;
@@ -77,18 +76,6 @@ public class GameGraphics {
 
     public void start() {
         frame.setVisible(true);
-
-        switchToScene(new SpawnScene(gameEngine));
-        /*new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            SwingUtilities.invokeLater(() -> {
-                switchToScene(new TitleScene(), new BlackFade());
-            });
-        }).start();*/
     }
 
     public void switchToScene(AbstractScene scene) {
@@ -164,6 +151,8 @@ public class GameGraphics {
         if (wasVisible) {
             frame.setVisible(true);
         }
+
+        frame.repaint();
     }
 
     public List<GraphicsDevice> getAvailableGraphicsDevice() {
