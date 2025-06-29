@@ -19,7 +19,7 @@ public class FinalDialog extends AbstractDialog {
     public void onDialogShow() {
         continueDialog("Mr. G:", "Mr. G hier.", () -> {
             continueDialog("Eagle:", "Mr. G es ist erledigt, die Führungsstelle ist gesprengt, Mission erfüllt.", () -> {
-                continueDialog("Mr. G:", "Sehr gut Eagle, ich wusste dass auf dich verlass ist. Deine Aktion und das daraus entstehende Chaos wird es uns ermöglichen die Macht in die richtigen Hände zu geben, damit sich so etwas nicht wiederholt.", () -> {
+                continueDialog("Mr. G:", "Sehr gut Eagle, ich wusste, dass auf dich Verlass ist. Deine Aktion und das daraus entstehende Chaos wird es uns ermöglichen die Macht in die richtigen Hände zu geben, damit sich so etwas nicht wiederholt.", () -> {
                     continueDialog("Mr. G:", " Danke Eagle, das ist allein dein Verdienst, dass die Menschen wieder frei sind. " +
                                     "Ich melde mich wenn es einen neuen Auftrag für dich gibt.", () -> {
                         continueDialog("Mr. G:", "Mr. G out.", () -> {

@@ -127,7 +127,7 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
     }
 
     private void initPhoneInteractionHint() {
-        phoneInteractionHint = new InteractionHint("Telfon" +" (" + KeyEvent.getKeyText(engine.getKeyMappingSettings().INTERACT) + ")");
+        phoneInteractionHint = new InteractionHint("Telefon" +" (" + KeyEvent.getKeyText(engine.getKeyMappingSettings().INTERACT) + ")");
         phoneInteractionHint.setVisible(false);
         add(phoneInteractionHint);
     }

@@ -19,7 +19,7 @@ public class SecondFarmerDialog extends AbstractDialog {
     @Override
     public void onDialogShow() {
         continueDialog("Bauer:", " Ah, du bist fertig?", () -> {
-            continueDialog("Eagle:", "Ja genau, war auch gar nicht so schlimm wie gedacht. Hast du meinen Amoniak?", () -> {
+            continueDialog("Eagle:", "Ja genau, war auch gar nicht so schlimm wie gedacht. Hast du meinen Ammonia?", () -> {
                 continueDialog("Bauer:", "Hui, da hat es aber wer eilig... Aber ja hier ist er.", () -> {
                     //Give player amoniak
                     engine.getInventoryManager().addItem(new Item(Item.Type.Amoniak));
@@ -27,7 +27,7 @@ public class SecondFarmerDialog extends AbstractDialog {
                     optionsDialog("", "Sich verabschieden und gehen.", "Wortlos einfach gehen (ich habe keine Zeit für dumme Gespräche)", optionA -> {
                         if (optionA) {
                             continueDialog("Eagle:", "Ah, vielen Dank! Ich muss dann aber auch los. Meine Zimmerpflanzen warten...", () -> {
-                                continueDialog("Bauer:", "Ja klar, auf wiedersehen!", this::travelBack);
+                                continueDialog("Bauer:", "Ja klar, auf Wiedersehen!", this::travelBack);
                             });
                         }else {
                             travelBack();

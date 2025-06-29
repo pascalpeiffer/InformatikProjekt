@@ -27,7 +27,7 @@ public class IntroductionCallDialog extends AbstractDialog {
         spawnScene.getPlayer().setMoveable(false);
         continueDialog("Mr. G:", "Hallo Eagle! Ich habe einen Auftrag für dich. Er ist etwas riskanter, aber ich glaube für dich sollte er kein Problem darstellen.", () -> {
             continueDialog("Eagle:", "Hört sich interessant an, worum geht es denn?", () -> {
-                continueDialog("Mr. G:", "Du musst deine chemische Kenntnisse einsetzen, um ein Strategisch wichtiges Ziel auszuschalten: Die Führungsstelle der repressiven Regierung. Wenn du es schaffst, werden wir die möglichkeit haben die Unterdrückung zu beenden.", () -> {
+                continueDialog("Mr. G:", "Du musst deine chemischen Kenntnisse einsetzen, um ein strategisch wichtiges Ziel auszuschalten: Die Führungsstelle der repressiven Regierung. Wenn du es schaffst, werden wir die Möglichkeit haben die Unterdrückung zu beenden.", () -> {
                     optionsDialog("Mr.G: Nimmst du den Auftrag an Eagle?", "Mr. G das sind mir zu wenige Informationen, ich werde erst bestätigen wenn ich mehr weiß.", "Ja ich nehme den Auftrag an.", optionA -> {
                         if (optionA) {
 
@@ -36,7 +36,7 @@ public class IntroductionCallDialog extends AbstractDialog {
                                     optionsDialog("Eagle:", " Ich sehe, warum wir die Regierung ausschalten müssen. Mr. G ich nehme die Mission an.", "Nein, dass kann ich nicht tun. Es ist zu gefährlich für mich.", optionA1 -> {
                                         if (optionA1) {
 
-                                            continueDialog("Mr. G:" ,"Sehr Gut Eagle. Ich erwarte die Bericht nach abschluss der Mission. Und bedenke, die Mission darf nicht am Tag durchgeführt werden.", () -> {
+                                            continueDialog("Mr. G:" ,"Sehr gut, Eagle. Ich erwarte den Bericht nach Abschluss der Mission. Und bedenke, die Mission darf nicht am Tag durchgeführt werden.", () -> {
                                                 continueDialog("Eagle:", "Ich verstehe, ich melde mich.", () -> {
                                                     continueDialog("Mr. G:", "G out.", () -> {
                                                         engine.getStateManager().setState(GameState.GAME_INTRODUCED);

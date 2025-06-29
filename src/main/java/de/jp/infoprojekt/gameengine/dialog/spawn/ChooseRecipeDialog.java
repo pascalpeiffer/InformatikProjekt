@@ -16,7 +16,7 @@ public class ChooseRecipeDialog extends AbstractDialog {
 
     @Override
     public void onDialogShow() {
-        continueDialog("Eagle:","Hmm, ich habe jetzt das Rezept und weiß, was ich brauche. Welche Zutat besorge ich zu erst?", () -> {
+        continueDialog("Eagle:","Hmm, ich habe jetzt das Rezept und weiß, was ich brauche. Welche Zutat besorge ich zuerst?", () -> {
             optionsDialog("Welche Zutat besorge ich zu erst?", "Salpetersäure", "Schwefelsäure", optionA -> {
                 if (optionA) {
                     engine.getStateManager().setState(GameState.FIRST_NITRIC_ACID);

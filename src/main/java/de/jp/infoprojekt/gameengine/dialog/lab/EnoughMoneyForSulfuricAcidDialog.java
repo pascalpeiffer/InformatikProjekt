@@ -31,7 +31,7 @@ public class EnoughMoneyForSulfuricAcidDialog extends AbstractDialog {
             });
         }else {
             //PLAYER ALREADY HAS SulfuricAcid
-            continueDialog("Eagle:", "Puh. Geschaft. Endlich wieder zurück nach oben.", () -> {
+            continueDialog("Eagle:", "Puh. Geschafft. Endlich wieder zurück nach oben.", () -> {
                 engine.getStateManager().setState(GameState.BUY_SULFURIC_ACID);
                 engine.getStateManager().setQuest(QuestState.NO_QUEST);
                 labScene.getPlayer().setMoveable(true);
