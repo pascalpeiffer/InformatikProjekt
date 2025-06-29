@@ -53,7 +53,7 @@ public class GameEngine {
         graphics.start();
         addFullscreenKey();
         graphics.switchToScene(new ColorScene(Color.BLACK));
-        graphics.switchToScene(new HeadquarterScene(this), new BlackFade(this, 300));
+        graphics.switchToScene(new SpawnScene(this), new BlackFade(this, 300));
     }
 
     private void addFullscreenKey() {

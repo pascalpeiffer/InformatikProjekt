@@ -10,7 +10,7 @@ public class GameStateManager {
 
     private final GameEngine engine;
 
-    private GameState currentGameState = GameState.RESTED;
+    private GameState currentGameState = GameState.GAME_ENTRY;
 
     private final ObjectProperty<QuestState> currentQuest = new SimpleObjectProperty<>(QuestState.NO_QUEST);
 
