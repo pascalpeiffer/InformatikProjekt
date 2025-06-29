@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.jp</groupId>
-    <artifactId>InformatikProjekt</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>MissionTakedown</artifactId>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -39,12 +39,16 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
                 <configuration>
+                    <finalName>MissionTakedown</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>de.jp.infoprojekt.GameMain</mainClass>
+                            <mainClass>de.missiontakedown.GameMain</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -53,14 +57,56 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <id>make-assembly</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
+
+            <!--<plugin> EXE Test
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>l4j-clui</id>
+                        <phase>package</phase>
+                        <goals><goal>launch4j</goal></goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>target/MissionTakedown.exe</outfile>
+                            <jar>target/MissionTakedown.jar</jar>
+                            <icon>src/main/resources/GameLogo.ico</icon>
+                            <errTitle>MissionTakedown</errTitle>
+                            <classPath>
+                                <mainClass>de.missiontakedown.GameMain</mainClass>
+                                <addDependencies>true</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <jre>
+                                <minVersion>1.5.0</minVersion>
+                                <opts>
+                                    <opt>-Djava.endorsed.dirs=./endorsed</opt>
+                                </opts>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>1.0.0.0</fileVersion>
+                                <txtFileVersion>txt file version?</txtFileVersion>
+                                <fileDescription>Test desc</fileDescription>
+                                <copyright>Test CR</copyright>
+                                <productVersion>1.0.0.0</productVersion>
+                                <txtProductVersion>txt product version</txtProductVersion>
+                                <productName>MissionTakedown</productName>
+                                <internalName>MissionTakedown</internalName>
+                                <originalFilename>MissionTakedown.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
         </plugins>
     </build>
 
