@@ -10,6 +10,9 @@ import de.missiontakedown.gameengine.state.GameState;
 import de.missiontakedown.gameengine.state.QuestState;
 import de.missiontakedown.resources.scenes.FarmerSceneResource;
 
+/**
+ * @author Jan
+ */
 public class FirstFarmerDialog extends AbstractDialog {
 
     private final GameEngine engine;

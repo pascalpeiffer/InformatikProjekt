@@ -9,6 +9,9 @@ import de.missiontakedown.util.FontManager;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class InteractionHint extends AbstractGameObject implements ScalingEvent {
 
     private String hint;

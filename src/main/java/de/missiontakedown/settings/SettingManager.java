@@ -10,6 +10,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * @author Pascal
+ */
 public class SettingManager implements Serializable {
 
     private static SettingManager instance;

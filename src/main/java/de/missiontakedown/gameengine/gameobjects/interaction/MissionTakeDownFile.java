@@ -6,6 +6,9 @@ import de.missiontakedown.resources.interaction.InteractionResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class MissionTakeDownFile extends AbstractGameObject implements ScalingEvent {
 
     public MissionTakeDownFile() {

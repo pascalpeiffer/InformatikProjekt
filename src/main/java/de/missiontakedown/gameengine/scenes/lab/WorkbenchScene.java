@@ -22,6 +22,9 @@ import de.missiontakedown.resources.scenes.LabSceneResource;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class WorkbenchScene extends AbstractScene implements ScalingEvent, GameTick {
 
     private final GameEngine engine;

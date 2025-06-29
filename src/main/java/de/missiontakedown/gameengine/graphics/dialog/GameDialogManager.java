@@ -2,6 +2,9 @@ package de.missiontakedown.gameengine.graphics.dialog;
 
 import de.missiontakedown.gameengine.GameEngine;
 
+/**
+ * @author Pascal
+ */
 public class GameDialogManager {
 
     private final GameEngine engine;

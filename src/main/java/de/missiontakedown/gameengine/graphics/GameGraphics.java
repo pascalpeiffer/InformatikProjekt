@@ -13,6 +13,9 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author Pascal
+ */
 public class GameGraphics {
 
     private final GameEngine gameEngine;

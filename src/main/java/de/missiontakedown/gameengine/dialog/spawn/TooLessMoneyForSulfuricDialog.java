@@ -4,6 +4,9 @@ import de.missiontakedown.gameengine.GameEngine;
 import de.missiontakedown.gameengine.graphics.dialog.AbstractDialog;
 import de.missiontakedown.gameengine.state.QuestState;
 
+/**
+ * @author Jan
+ */
 public class TooLessMoneyForSulfuricDialog extends AbstractDialog {
 
     private final GameEngine engine;

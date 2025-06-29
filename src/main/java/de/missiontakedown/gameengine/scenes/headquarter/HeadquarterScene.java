@@ -24,6 +24,9 @@ import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+/**
+ * @author Pascal
+ */
 public class HeadquarterScene extends AbstractScene implements ScalingEvent, GameTick {
 
     private final GameEngine engine;

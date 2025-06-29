@@ -8,6 +8,9 @@ import de.missiontakedown.resources.item.ItemResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class ElectrolysisDevice extends AbstractGameObject implements GameTick {
 
     private final GameResource electrolysis = ItemResource.Electrolysis;

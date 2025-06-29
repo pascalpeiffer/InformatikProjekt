@@ -13,6 +13,9 @@ import javafx.collections.ListChangeListener;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class InventoryOverlay extends AbstractGameObject implements ScalingEvent {
 
     private final GameEngine engine;

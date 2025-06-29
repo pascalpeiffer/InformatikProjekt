@@ -2,6 +2,9 @@ package de.missiontakedown.settings;
 
 import de.missiontakedown.resources.GameAudioResource;
 
+/**
+ * @author Pascal
+ */
 public class GAME_SETTINGS {
 
     public static final int SULFURIC_ACID_COST = 500;

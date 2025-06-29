@@ -8,6 +8,9 @@ import javax.sound.sampled.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Pascal
+ */
 public class ResourceManager {
 
     public static GameResource MAIN_LOGO = new GameResource("/GameLogo.png");

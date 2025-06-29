@@ -7,6 +7,9 @@ import de.missiontakedown.resources.scenes.ComputerSceneResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class AmazonIcon extends AbstractGameObject implements ScalingEvent {
 
     private final GameResource background = ComputerSceneResource.AMAZON;

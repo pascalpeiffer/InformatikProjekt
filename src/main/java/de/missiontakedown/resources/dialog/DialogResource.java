@@ -3,6 +3,9 @@ package de.missiontakedown.resources.dialog;
 import de.missiontakedown.resources.GameAudioResource;
 import de.missiontakedown.resources.GameResource;
 
+/**
+ * @author Jan
+ */
 public class DialogResource {
 
     public static GameResource DIALOG = new GameResource("/dialog/Dialog.png", 1.4f, 1f);

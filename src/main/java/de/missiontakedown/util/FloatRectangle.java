@@ -1,5 +1,8 @@
 package de.missiontakedown.util;
 
+/**
+ * @author Jan
+ */
 public class FloatRectangle {
 
     private float x;

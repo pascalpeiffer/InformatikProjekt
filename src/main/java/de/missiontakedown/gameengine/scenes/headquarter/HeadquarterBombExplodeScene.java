@@ -12,6 +12,9 @@ import de.missiontakedown.resources.scenes.HeadquarterSceneResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class HeadquarterBombExplodeScene extends AbstractScene implements ScalingEvent, GameTick {
 
     private final GameResource background = HeadquarterSceneResource.BOMB_EXPLODED;

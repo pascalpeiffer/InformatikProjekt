@@ -12,6 +12,9 @@ import de.missiontakedown.util.FontManager;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class MoneyOverlay extends AbstractGameObject implements ScalingEvent {
 
     private final GameEngine engine;

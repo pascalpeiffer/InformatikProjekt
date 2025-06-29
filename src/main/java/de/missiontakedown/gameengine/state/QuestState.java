@@ -1,9 +1,12 @@
 package de.missiontakedown.gameengine.state;
 
+/**
+ * @author Pascal
+ */
 public enum QuestState {
 
     NO_QUEST(""),
-    USE_COMPUTER("Benutze den Computer"),
+    USE_COMPUTER("Benutze den Computer (Wikipedia)"),
 
     CREATE_NITRIC_ACID("Stelle Salpetersäure her (Wikipedia)"),
 

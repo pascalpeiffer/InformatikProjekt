@@ -4,6 +4,9 @@ import de.missiontakedown.gameengine.GameEngine;
 import de.missiontakedown.gameengine.gameobjects.overlay.DistillationOverlay;
 import de.missiontakedown.gameengine.graphics.dialog.AbstractDialog;
 
+/**
+ * @author Jan
+ */
 public class WrongDistillationDialog extends AbstractDialog {
 
     private final GameEngine engine;

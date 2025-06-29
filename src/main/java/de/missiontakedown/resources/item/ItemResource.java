@@ -2,6 +2,9 @@ package de.missiontakedown.resources.item;
 
 import de.missiontakedown.resources.GameResource;
 
+/**
+ * @author Jan
+ */
 public class ItemResource {
 
     public static final GameResource AcidGen = new GameResource("/item/AcidGen.png", 0.5f);

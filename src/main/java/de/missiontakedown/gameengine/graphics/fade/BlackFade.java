@@ -9,6 +9,9 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+/**
+ * @author Pascal
+ */
 public class BlackFade extends AbstractFade {
 
     private final GameEngine engine;

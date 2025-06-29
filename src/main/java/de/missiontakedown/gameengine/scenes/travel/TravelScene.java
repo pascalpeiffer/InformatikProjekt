@@ -11,6 +11,9 @@ import de.missiontakedown.resources.scenes.TravelSceneResource;
 import javax.sound.sampled.Clip;
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class TravelScene extends AbstractScene implements GameTick {
 
     private final GameEngine engine;

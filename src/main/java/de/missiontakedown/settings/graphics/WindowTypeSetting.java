@@ -1,5 +1,8 @@
 package de.missiontakedown.settings.graphics;
 
+/**
+ * @author Pascal
+ */
 public enum WindowTypeSetting {
 
     FULLSCREEN (0, "Vollbild"),

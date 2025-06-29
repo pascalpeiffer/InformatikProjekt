@@ -4,6 +4,9 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Pascal
+ */
 public class TextRenderer {
 
     // Mapping colors

@@ -5,6 +5,9 @@ import de.missiontakedown.gameengine.graphics.dialog.AbstractDialog;
 import de.missiontakedown.gameengine.graphics.fade.BlackFade;
 import de.missiontakedown.gameengine.scenes.lab.WorkbenchScene;
 
+/**
+ * @author Jan
+ */
 public class NitratorDialog extends AbstractDialog {
 
     private final GameEngine engine;

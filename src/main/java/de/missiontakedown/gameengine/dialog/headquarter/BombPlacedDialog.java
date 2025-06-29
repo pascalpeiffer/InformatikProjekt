@@ -5,6 +5,9 @@ import de.missiontakedown.gameengine.graphics.dialog.AbstractDialog;
 import de.missiontakedown.gameengine.scenes.headquarter.HeadquarterScene;
 import de.missiontakedown.gameengine.state.QuestState;
 
+/**
+ * @author Jan
+ */
 public class BombPlacedDialog extends AbstractDialog {
 
     private final GameEngine engine;

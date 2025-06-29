@@ -5,6 +5,9 @@ import de.missiontakedown.gameengine.scenes.AbstractScene;
 
 import javax.swing.*;
 
+/**
+ * @author Pascal
+ */
 public abstract class AbstractFade extends JPanel {
 
     public abstract void fade(AbstractScene scene, GameGraphics graphics);

@@ -6,6 +6,9 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * @author Pascal
+ */
 public class ScreenTile extends JPanel {
 
     public ScreenTile() {

@@ -6,6 +6,9 @@ import de.missiontakedown.resources.item.ItemResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class DistillationDevice extends AbstractGameObject {
 
     private final GameResource distillation = ItemResource.Distillation;

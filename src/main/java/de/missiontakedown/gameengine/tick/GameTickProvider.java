@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Pascal
+ */
 public class GameTickProvider {
 
     private final int tickDelay;

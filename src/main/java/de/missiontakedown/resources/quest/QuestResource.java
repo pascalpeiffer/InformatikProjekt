@@ -3,6 +3,9 @@ package de.missiontakedown.resources.quest;
 import de.missiontakedown.resources.GameAudioResource;
 import de.missiontakedown.resources.GameResource;
 
+/**
+ * @author Jan
+ */
 public class QuestResource {
 
     public static GameAudioResource NEW_QUEST = new GameAudioResource("/quest/NewQuest.wav", 0.3f);

@@ -2,6 +2,9 @@ package de.missiontakedown.util;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * @author Jan
+ */
 public class FloatPoint {
 
     private float x;

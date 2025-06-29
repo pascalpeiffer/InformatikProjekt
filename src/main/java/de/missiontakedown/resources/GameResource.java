@@ -5,6 +5,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * @author Pascal
+ */
 public class GameResource {
 
     private final BufferedImage imageResource;

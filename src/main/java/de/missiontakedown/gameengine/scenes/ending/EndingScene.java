@@ -12,6 +12,9 @@ import de.missiontakedown.settings.GAME_SETTINGS;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class EndingScene extends AbstractScene implements ScalingEvent, GameTick {
 
     private final GameEngine engine;

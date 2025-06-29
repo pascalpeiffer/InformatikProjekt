@@ -5,6 +5,9 @@ import org.json.JSONObject;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class GraphicSettings extends AbstractSettings {
 
     private WindowTypeSetting WINDOW_SETTING = WindowTypeSetting.WINDOWED_FULLSCREEN;

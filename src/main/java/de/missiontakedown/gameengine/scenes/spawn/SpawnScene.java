@@ -36,6 +36,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+/**
+ * @author Pascal
+ */
 public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick {
 
     private final GameEngine engine;

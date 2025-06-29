@@ -2,6 +2,9 @@ package de.missiontakedown.resources.scenes;
 
 import de.missiontakedown.resources.GameResource;
 
+/**
+ * @author Jan
+ */
 public class TitleSceneResource {
 
     public static GameResource TITLE_SCREEN = new GameResource("/scenes/title/TitleSceneBackground.png");

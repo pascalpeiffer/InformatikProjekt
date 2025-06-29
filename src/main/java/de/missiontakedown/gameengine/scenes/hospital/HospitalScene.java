@@ -13,6 +13,9 @@ import de.missiontakedown.util.FontManager;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class HospitalScene extends AbstractScene implements GameTick {
 
     private final GameResource background = HospitalSceneResource.BACKGROUND;

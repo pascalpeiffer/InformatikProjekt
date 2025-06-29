@@ -29,6 +29,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * @author Pascal
+ */
 public class ComputerScene extends AbstractScene implements ScalingEvent, GameTick {
 
     private final GameEngine engine;

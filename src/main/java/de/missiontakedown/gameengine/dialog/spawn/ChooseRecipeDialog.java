@@ -5,6 +5,9 @@ import de.missiontakedown.gameengine.graphics.dialog.AbstractDialog;
 import de.missiontakedown.gameengine.state.GameState;
 import de.missiontakedown.gameengine.state.QuestState;
 
+/**
+ * @author Jan
+ */
 public class ChooseRecipeDialog extends AbstractDialog {
 
     private final GameEngine engine;

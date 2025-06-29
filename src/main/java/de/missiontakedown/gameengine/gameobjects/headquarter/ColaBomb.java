@@ -6,6 +6,9 @@ import de.missiontakedown.resources.item.ItemResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class ColaBomb extends AbstractGameObject {
 
     private final GameResource colaBomb = ItemResource.ColaBomb_NIGHT;

@@ -7,6 +7,9 @@ import de.missiontakedown.gameengine.inventory.Item;
 import de.missiontakedown.gameengine.scenes.spawn.SpawnScene;
 import de.missiontakedown.gameengine.scenes.travel.TravelScene;
 
+/**
+ * @author Jan
+ */
 public class SecondFarmerDialog extends AbstractDialog {
 
     private final GameEngine engine;

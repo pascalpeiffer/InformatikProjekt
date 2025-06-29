@@ -1,5 +1,8 @@
 package de.missiontakedown.gameengine.state;
 
+/**
+ * @author Pascal
+ */
 public enum GameState {
 
     DEV(1000),

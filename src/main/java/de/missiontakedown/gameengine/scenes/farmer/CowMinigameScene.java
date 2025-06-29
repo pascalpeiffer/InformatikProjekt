@@ -19,6 +19,9 @@ import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.util.Random;
 
+/**
+ * @author Pascal
+ */
 public class CowMinigameScene extends AbstractScene implements GameTick {
 
     private final GameEngine engine;

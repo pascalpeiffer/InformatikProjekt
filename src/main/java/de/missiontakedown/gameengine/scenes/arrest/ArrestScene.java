@@ -12,6 +12,9 @@ import de.missiontakedown.util.FontManager;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class ArrestScene extends AbstractScene implements GameTick {
 
     private final GameEngine engine;

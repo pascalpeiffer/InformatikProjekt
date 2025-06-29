@@ -12,6 +12,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+/**
+ * @author Pascal
+ */
 public abstract class AbstractDialog extends JComponent implements ScalingEvent, GameTick {
 
     private final GameEngine engine;

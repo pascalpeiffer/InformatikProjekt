@@ -6,6 +6,9 @@ import de.missiontakedown.resources.scenes.CowMinigameSceneResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class Poop extends AbstractGameObject {
 
     private final GameResource poopResource = CowMinigameSceneResource.POOP;

@@ -13,6 +13,9 @@ import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * @author Pascal
+ */
 public class PlayerCharacter extends AbstractGameObject implements ScalingEvent, GameTick {
 
     private final GameEngine engine;

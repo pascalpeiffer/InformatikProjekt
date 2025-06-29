@@ -14,6 +14,9 @@ import de.missiontakedown.resources.scenes.FarmerSceneResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class FarmerScene extends AbstractScene {
 
     private final GameEngine engine;

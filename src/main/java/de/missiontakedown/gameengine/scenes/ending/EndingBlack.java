@@ -11,6 +11,9 @@ import de.missiontakedown.settings.GAME_SETTINGS;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class EndingBlack extends AbstractScene implements ScalingEvent {
 
     private final GameEngine engine;

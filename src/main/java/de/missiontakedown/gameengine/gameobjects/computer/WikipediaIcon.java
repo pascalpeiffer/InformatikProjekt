@@ -6,6 +6,9 @@ import de.missiontakedown.resources.scenes.ComputerSceneResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class WikipediaIcon extends AbstractGameObject {
 
     private final GameResource background = ComputerSceneResource.WIKIPEDIA;

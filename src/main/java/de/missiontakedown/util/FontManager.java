@@ -6,6 +6,9 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * @author Jan
+ */
 public class FontManager {
 
     public static Font JERSEY_10;

@@ -3,6 +3,9 @@ package de.missiontakedown.resources.scenes;
 import de.missiontakedown.resources.GameAudioResource;
 import de.missiontakedown.resources.GameResource;
 
+/**
+ * @author Jan
+ */
 public class HospitalSceneResource {
 
     public static final GameResource BACKGROUND = new GameResource("/scenes/hospital/Background.png");

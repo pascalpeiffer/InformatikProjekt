@@ -7,6 +7,9 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Optional;
 
+/**
+ * @author Pascal
+ */
 public class GameInventoryManager {
 
     private final GameEngine engine;

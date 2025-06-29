@@ -29,6 +29,9 @@ import de.missiontakedown.util.FloatPoint;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+/**
+ * @author Pascal
+ */
 public class LabScene extends AbstractScene implements ScalingEvent, GameTick {
 
     private final GameEngine engine;

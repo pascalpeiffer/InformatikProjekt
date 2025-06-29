@@ -3,6 +3,9 @@ package de.missiontakedown.resources.scenes;
 import de.missiontakedown.resources.GameAudioResource;
 import de.missiontakedown.resources.GameResource;
 
+/**
+ * @author Jan
+ */
 public class TravelSceneResource {
 
     public static GameResource BACKGROUND = new GameResource("/scenes/travel/TravellingBackground.png");

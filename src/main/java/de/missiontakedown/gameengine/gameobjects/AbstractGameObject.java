@@ -10,6 +10,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Pascal
+ */
 public abstract class AbstractGameObject extends JComponent implements ScalingEvent {
 
     private float relativeX;

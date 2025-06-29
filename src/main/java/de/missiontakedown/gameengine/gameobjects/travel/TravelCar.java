@@ -6,6 +6,9 @@ import de.missiontakedown.resources.scenes.TravelSceneResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class TravelCar extends AbstractGameObject {
 
     private final GameResource dayCarResource = TravelSceneResource.CAR;

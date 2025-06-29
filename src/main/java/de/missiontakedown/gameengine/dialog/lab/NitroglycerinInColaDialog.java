@@ -7,6 +7,9 @@ import de.missiontakedown.gameengine.scenes.lab.LabScene;
 import de.missiontakedown.gameengine.state.GameState;
 import de.missiontakedown.gameengine.state.QuestState;
 
+/**
+ * @author Jan
+ */
 public class NitroglycerinInColaDialog extends AbstractDialog {
 
     private final GameEngine engine;

@@ -1,69 +1,49 @@
 package de.missiontakedown.gameengine.scenes.main;
 
 import de.missiontakedown.gameengine.GameEngine;
+import de.missiontakedown.gameengine.graphics.fade.BlackFade;
+import de.missiontakedown.gameengine.graphics.render.TextRenderer;
 import de.missiontakedown.gameengine.scenes.AbstractScene;
+import de.missiontakedown.resources.ResourceManager;
+import de.missiontakedown.resources.ScalingEvent;
 import de.missiontakedown.resources.scenes.TitleSceneResource;
 import de.missiontakedown.settings.graphics.WindowTypeSetting;
+import de.missiontakedown.util.FontManager;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-//TODO rewrite
-public class SettingsScene extends AbstractScene {
+/**
+ * @author Pascal
+ */
+//TODO rewrite this mess
+public class SettingsScene extends AbstractScene implements ScalingEvent {
 
     private GameEngine gameEngine;
-
-    private Box verticalSettingsBox = Box.createVerticalBox();
 
     private JComboBox<String> graphicsDeviceList = new JComboBox<>();
     private JComboBox<String> windowTypeList = new JComboBox<>();
 
     private JButton applyButton = new JButton("Anwenden");
 
+    private final Font font = FontManager.JERSEY_20;
+
     public SettingsScene(GameEngine engine) {
         this.gameEngine = engine;
-
         setBackground(Color.BLACK);
+        setLayout(null);
 
-        setLayout(new BorderLayout());
+        ResourceManager.addScalingListener(this);
 
-        /*JTextField inputField = new JTextField();
-        inputField.setBounds(50, 50, 250, 35);
-        inputField.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        inputField.setForeground(Color.DARK_GRAY);
-        inputField.setBackground(new Color(230, 230, 250)); // Light lavender
-        inputField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(150, 150, 200), 2),
-                BorderFactory.createEmptyBorder(5, 10, 5, 10)
-        ));
+        add(addGraphicsDeviceList());
+        add(addWindowTypeList());
 
-        JButton confirmButton = new JButton("Confirm");
-        confirmButton.setBounds(310, 50, 90, 35);
-        confirmButton.setBackground(new Color(100, 149, 237)); // Cornflower blue
-        confirmButton.setForeground(Color.WHITE);
-        confirmButton.setFont(new Font("SansSerif", Font.BOLD, 14));
-        confirmButton.setFocusPainted(false);
-        confirmButton.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 2));
+        add(addApplyButton());
 
-        // Add button listener
-        confirmButton.addActionListener(e -> {
-            String text = inputField.getText();
-            JOptionPane.showMessageDialog(null, "You entered: " + text);
-        });
-
-        add(confirmButton);
-        add(inputField);*/
-
-
-        verticalSettingsBox.add(addGraphicsDeviceList());
-        verticalSettingsBox.add(Box.createRigidArea(new Dimension(0, 10)));
-        verticalSettingsBox.add(addWindowTypeList());
-
-        add(verticalSettingsBox, BorderLayout.PAGE_START);
-
-        add(addApplyButton(), BorderLayout.PAGE_END);
+        update();
     }
 
     private Component addGraphicsDeviceList() {
@@ -73,19 +53,35 @@ public class SettingsScene extends AbstractScene {
             graphicsDevicesNames[i] = graphicsDevices.get(i).getIDstring();
         }
         graphicsDeviceList.setModel(new DefaultComboBoxModel<>(graphicsDevicesNames));
-        graphicsDeviceList.setSize(250, 35);
-        graphicsDeviceList.setBackground(new Color(245, 245, 255));
+
         graphicsDeviceList.setForeground(Color.BLACK);
         graphicsDeviceList.setFont(new Font("SansSerif", Font.BOLD, 14));
 
         graphicsDeviceList.setSelectedItem(gameEngine.getGraphics().getSelectedGraphicsDevice().getIDstring());
 
-        //graphicsList.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 2));
+        DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+        graphicsDeviceList.setRenderer(renderer);
 
-        addComponentListener(new ComponentAdapter() {
+        graphicsDeviceList.setUI(new BasicComboBoxUI() {
             @Override
-            public void componentResized(ComponentEvent e) {
-                graphicsDeviceList.setLocation((getWidth() / 2) - (graphicsDeviceList.getWidth() / 2), 100);
+            protected JButton createArrowButton() {
+                return new JButton() {
+                    @Override
+                    public int getWidth() {
+                        return 0; // effectively hides the button
+                    }
+
+                    @Override
+                    public void paint(Graphics g) {
+                        // do nothing
+                    }
+                };
+            }
+
+            @Override
+            public void configureArrowButton() {
+                // skip adding the button
             }
         });
 
@@ -101,35 +97,54 @@ public class SettingsScene extends AbstractScene {
         }
 
         windowTypeList.setModel(new DefaultComboBoxModel<>(windowTypeNames));
-        windowTypeList.setSize(250, 35);
         windowTypeList.setBackground(new Color(245, 245, 255));
         windowTypeList.setForeground(Color.BLACK);
         windowTypeList.setFont(new Font("SansSerif", Font.BOLD, 14));
 
         windowTypeList.setSelectedItem(gameEngine.getGraphics().getSettings().getCurrentWindowSetting().getFriendlyName());
 
-        addComponentListener(new ComponentAdapter() {
+        DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+        windowTypeList.setRenderer(renderer);
+
+        windowTypeList.setUI(new BasicComboBoxUI() {
             @Override
-            public void componentResized(ComponentEvent e) {
-                windowTypeList.setLocation((getWidth() / 2) - (windowTypeList.getWidth() / 2), 300);
+            protected JButton createArrowButton() {
+                return new JButton() {
+                    @Override
+                    public int getWidth() {
+                        return 0;
+                    }
+
+                    @Override
+                    public void paint(Graphics g) {}
+                };
+            }
+
+            @Override
+            public void configureArrowButton() {
+                // skip adding the button
             }
         });
 
         return windowTypeList;
     }
 
+    private void update() {
+        graphicsDeviceList.setSize(getWidth() / 4, getHeight() / 10);
+        graphicsDeviceList.setLocation((getWidth() / 2) - (graphicsDeviceList.getWidth() / 2), getHeight() / 10 * 2);
+
+        windowTypeList.setSize(getWidth() / 4, getHeight() / 10);
+        windowTypeList.setLocation((getWidth() / 2) - (windowTypeList.getWidth() / 2), getHeight() / 10 * 4);
+
+        applyButton.setSize(getWidth() / 4, getHeight() / 10);
+        applyButton.setLocation((getWidth() / 2) - (applyButton.getWidth() / 2), getHeight() / 10 * 8);
+    }
+
     private Component addApplyButton() {
-        applyButton.setSize(250, 35);
         applyButton.setBackground(new Color(245, 245, 255));
         applyButton.setForeground(Color.BLACK);
         applyButton.setFont(new Font("SansSerif", Font.BOLD, 14));
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                applyButton.setLocation((getWidth() / 2) - (applyButton.getWidth() / 2), 500);
-            }
-        });
 
         applyButton.addActionListener(e -> {
             applySettings();
@@ -150,6 +165,8 @@ public class SettingsScene extends AbstractScene {
         }
 
         gameEngine.getGraphics().updateWindowType();
+
+        gameEngine.getGraphics().switchToScene(new TitleScene(gameEngine));
     }
 
     @Override
@@ -160,6 +177,24 @@ public class SettingsScene extends AbstractScene {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
         g2d.drawImage(TitleSceneResource.TITLE_SCREEN.getResource(), 0, 0, getWidth(), getHeight(), null);
         g2d.dispose();
+
+        FontMetrics metrics = getFontMetrics(getF());
+        String text = "Für Style keine Zeit ._.";
+        //TOOD fix 10000
+        TextRenderer.drawFormattedString(g, text, getWidth() / 2 - (metrics.stringWidth(text) / 2), getHeight() - metrics.getHeight(), 10000, 10000, getF(), Integer.MAX_VALUE);
     }
 
+    @Override
+    public void scale(float widthMultiply, float heightMultiply) {
+        update();
+        repaint();
+    }
+
+    public Font getF() {
+        return font.deriveFont((float) 20 * ResourceManager.getScaling().getX());
+    }
+
+    public FontMetrics getFontMetrics(Font font) {
+        return super.getFontMetrics(getF());
+    }
 }

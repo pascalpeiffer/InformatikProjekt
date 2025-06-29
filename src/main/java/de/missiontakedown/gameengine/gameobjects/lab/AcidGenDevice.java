@@ -8,6 +8,9 @@ import de.missiontakedown.resources.item.ItemResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class AcidGenDevice extends AbstractGameObject implements GameTick {
 
     private final GameResource acidGen = ItemResource.AcidGen;

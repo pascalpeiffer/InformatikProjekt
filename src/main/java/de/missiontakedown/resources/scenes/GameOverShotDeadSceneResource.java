@@ -3,6 +3,9 @@ package de.missiontakedown.resources.scenes;
 import de.missiontakedown.resources.GameAudioResource;
 import de.missiontakedown.resources.GameResource;
 
+/**
+ * @author Jan
+ */
 public class GameOverShotDeadSceneResource {
 
     public static GameResource BACKGROUND = new GameResource("/scenes/gameOverShotDead/GameOverShotDead.png");

@@ -11,6 +11,9 @@ import de.missiontakedown.resources.scenes.GameOverShotDeadSceneResource;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class GameOverShotDeadScene extends AbstractScene implements ScalingEvent, GameTick {
 
     private final GameResource background = GameOverShotDeadSceneResource.BACKGROUND;

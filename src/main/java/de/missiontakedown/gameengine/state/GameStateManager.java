@@ -6,6 +6,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+/**
+ * @author Pascal
+ */
 public class GameStateManager {
 
     private final GameEngine engine;

@@ -5,6 +5,9 @@ import org.json.JSONObject;
 
 import java.awt.event.KeyEvent;
 
+/**
+ * @author Pascal
+ */
 public class KeyMappingSettings extends AbstractSettings {
 
     public int FORWARD_KEY = KeyEvent.VK_W;

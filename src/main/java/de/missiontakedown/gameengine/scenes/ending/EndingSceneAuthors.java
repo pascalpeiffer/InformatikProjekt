@@ -13,6 +13,9 @@ import de.missiontakedown.util.FontManager;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class EndingSceneAuthors extends AbstractScene implements ScalingEvent, GameTick {
 
     private final Font titleFont = FontManager.JERSEY_20;

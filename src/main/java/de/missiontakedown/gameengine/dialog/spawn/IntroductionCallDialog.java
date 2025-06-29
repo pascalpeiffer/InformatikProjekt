@@ -11,6 +11,9 @@ import de.missiontakedown.resources.scenes.SpawnSceneResource;
 
 import javax.swing.*;
 
+/**
+ * @author Jan
+ */
 public class IntroductionCallDialog extends AbstractDialog {
 
     private final GameEngine engine;

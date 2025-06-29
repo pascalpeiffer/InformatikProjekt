@@ -3,6 +3,9 @@ package de.missiontakedown.gameengine.inventory;
 import de.missiontakedown.resources.GameResource;
 import de.missiontakedown.resources.item.ItemResource;
 
+/**
+ * @author Pascal
+ */
 public class Item {
 
     private final Type type;

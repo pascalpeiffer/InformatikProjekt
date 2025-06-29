@@ -25,6 +25,9 @@ import de.missiontakedown.io.key.GameKeyHandler;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class GameEngine {
 
     private static final int ticksPerSecond = 100;
@@ -53,7 +56,7 @@ public class GameEngine {
         graphics.start();
         addFullscreenKey();
         graphics.switchToScene(new ColorScene(Color.BLACK));
-        graphics.switchToScene(new SpawnScene(this), new BlackFade(this, 300));
+        graphics.switchToScene(new TitleScene(this), new BlackFade(this, 300));
     }
 
     private void addFullscreenKey() {

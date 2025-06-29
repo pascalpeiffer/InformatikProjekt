@@ -6,6 +6,9 @@ import de.missiontakedown.gameengine.scenes.spawn.SpawnScene;
 import de.missiontakedown.gameengine.state.GameState;
 import de.missiontakedown.gameengine.state.QuestState;
 
+/**
+ * @author Jan
+ */
 public class RememberFogFluidDialog extends AbstractDialog {
 
     private final GameEngine engine;

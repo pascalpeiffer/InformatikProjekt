@@ -3,6 +3,9 @@ package de.missiontakedown.resources.interaction;
 import de.missiontakedown.resources.GameAudioResource;
 import de.missiontakedown.resources.GameResource;
 
+/**
+ * @author Jan
+ */
 public class InteractionResource {
 
     public static GameResource INTERACTION_HINT = new GameResource("/interaction/InteractionHint.png");

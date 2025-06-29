@@ -19,6 +19,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * @author Pascal
+ */
 public class NitratorOverlay extends AbstractGameObject implements GameTick {
 
     private final GameEngine engine;

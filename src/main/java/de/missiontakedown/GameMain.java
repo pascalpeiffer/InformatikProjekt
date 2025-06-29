@@ -6,6 +6,9 @@ import de.missiontakedown.util.FontManager;
 
 import java.awt.*;
 
+/**
+ * @author Pascal
+ */
 public class GameMain {
 
     private static GameEngine gameEngine;

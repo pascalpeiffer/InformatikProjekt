@@ -6,6 +6,9 @@ import de.missiontakedown.gameengine.graphics.fade.BlackFade;
 import de.missiontakedown.gameengine.scenes.ending.EndingScene;
 import de.missiontakedown.gameengine.scenes.spawn.SpawnScene;
 
+/**
+ * @author Jan
+ */
 public class FinalDialog extends AbstractDialog {
 
     private final GameEngine engine;
