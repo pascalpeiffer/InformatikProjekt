@@ -68,10 +68,7 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
         ResourceManager.addScalingListener(this);
 
 
-        //TODO remove TEMP
-        if (engine.getStateManager().getState().getId() == GameState.GAME_INTRODUCED.getId()) {
-            engine.getStateManager().setQuest(QuestState.USE_COMPUTER);
-        }
+        introductionPhoneCallCooldown = engine.getTickProvider().getTicksPerSecond() * 5;
     }
 
     // -- INITIALIZE --

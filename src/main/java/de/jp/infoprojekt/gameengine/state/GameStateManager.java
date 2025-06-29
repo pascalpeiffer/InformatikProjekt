@@ -20,8 +20,7 @@ public class GameStateManager {
 
     private final ObjectProperty<QuestState> currentQuest = new SimpleObjectProperty<>(QuestState.NO_QUEST);
 
-    //TODO set to 200
-    private final SimpleIntegerProperty moneyCount = new SimpleIntegerProperty(520);
+    private final SimpleIntegerProperty moneyCount = new SimpleIntegerProperty();
 
     public GameStateManager(GameEngine engine) {
         this.engine = engine;
@@ -42,6 +41,13 @@ public class GameStateManager {
             QuestResource.NEW_QUEST.create().play();
         }
         currentQuest.set(quest);
+    }
+
+    public void reset() {
+        setState(GameState.GAME_ENTRY);
+        setQuest(QuestState.NO_QUEST);
+        engine.getInventoryManager().clearItems();
+        setMoneyCount(200);
     }
 
     public QuestState getQuest() {
