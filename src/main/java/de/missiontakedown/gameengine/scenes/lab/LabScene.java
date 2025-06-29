@@ -148,12 +148,10 @@ public class LabScene extends AbstractScene implements ScalingEvent, GameTick {
             if (!missionTakedownFile.isShowing()) {
                 InteractionResource.FILE_INTERACTION.create().play();
                 missionTakedownFile.setVisible(true);
-                player.setMoveable(false);
             }
         }else {
             if (missionTakedownFile.isShowing()) {
                 missionTakedownFile.setVisible(false);
-                player.setMoveable(true);
             }
         }
     }

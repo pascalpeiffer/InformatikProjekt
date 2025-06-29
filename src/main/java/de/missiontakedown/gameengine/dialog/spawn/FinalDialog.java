@@ -2,6 +2,8 @@ package de.missiontakedown.gameengine.dialog.spawn;
 
 import de.missiontakedown.gameengine.GameEngine;
 import de.missiontakedown.gameengine.graphics.dialog.AbstractDialog;
+import de.missiontakedown.gameengine.graphics.fade.BlackFade;
+import de.missiontakedown.gameengine.scenes.ending.EndingScene;
 import de.missiontakedown.gameengine.scenes.spawn.SpawnScene;
 
 public class FinalDialog extends AbstractDialog {
@@ -25,7 +27,8 @@ public class FinalDialog extends AbstractDialog {
                         continueDialog("Mr. G:", "Mr. G out.", () -> {
                             dispose();
                             scene.getPlayer().setMoveable(true);
-                            //TODO end scene
+
+                            engine.getGraphics().switchToScene(new EndingScene(engine), new BlackFade(engine));
                         });
                     });
                 });

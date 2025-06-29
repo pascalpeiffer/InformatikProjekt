@@ -10,7 +10,7 @@ public class GameStateManager {
 
     private final GameEngine engine;
 
-    private GameState currentGameState = GameState.BUY_SULFURIC_ACID;
+    private GameState currentGameState = GameState.RESTED;
 
     private final ObjectProperty<QuestState> currentQuest = new SimpleObjectProperty<>(QuestState.NO_QUEST);
 
@@ -25,8 +25,6 @@ public class GameStateManager {
     }
 
     public void setState(GameState currentGameState) {
-        //TODO remove dev
-        System.out.println("New State: " + currentGameState.name());
         this.currentGameState = currentGameState;
     }
 

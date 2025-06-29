@@ -5,11 +5,11 @@ public enum QuestState {
     NO_QUEST(""),
     USE_COMPUTER("Benutze den Computer"),
 
-    CREATE_NITRIC_ACID("Stelle Salpetersäure her"),
+    CREATE_NITRIC_ACID("Stelle Salpetersäure her (Wikipedia)"),
 
     BUY_SULFURIC_ACID("Bestelle Schwefelsäure"),
 
-    GO_TO_FARMER("Fahre zum Bauernhof um Ammoniak zu besorgen"),
+    GO_TO_FARMER("Fahre zum Bauernhof um Ammoniak zu besorgen (ESC PC verlassen)"),
     EARN_MONEY("Spare auf mindestens 520 Euro"),
 
     CREATE_OXYGEN("Stelle Sauerstoff her (Im Labor)"),

@@ -19,7 +19,6 @@ public class GameTickProvider {
         tickDelay = 1000 / ticksPerSecond;
 
         new Timer(tickDelay, e -> {
-            //TODO add dev overlay to show ticks per second and the time it took
             runnables.removeAll(removingRunnables);
             removingRunnables.clear();
             runnables.addAll(addingRunnables);

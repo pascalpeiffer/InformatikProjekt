@@ -16,7 +16,7 @@ public class NitratorDialog extends AbstractDialog {
 
     @Override
     public void onDialogShow() {
-        continueDialog("Eagle:", "§o§lSchaut auf das Rezept...§r Die Reaktion im Nitrator ist Exothermisch.", () -> {
+        continueDialog("Eagle:", "§o§lSchaut auf das Rezept...§r Die Reaktion im Nitrator ist exotherm.", () -> {
             continueDialog("Eagle:", "Sie erfordert somit ständige Kühlung und langsame Zugabe der Inhalte.", () -> {
                 continueDialog("Eagle:", "Wenn die Mischung die Temperatur von 30° übersteigt, explodiert sie.", () -> {
                     continueDialog("Eagle:", "Naja gut, dann wollen wir mal.", () -> {

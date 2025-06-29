@@ -32,7 +32,7 @@ public class IntroductionCallDialog extends AbstractDialog {
                         if (optionA) {
 
                             continueDialog("Mr. G:", " Ich verstehe, hier ist die Akte der Mission (TAB):", () -> {
-                                missionFileDialog(() -> {
+                                //missionFileDialog(() -> {
                                     optionsDialog("Eagle:", " Ich sehe, warum wir die Regierung ausschalten müssen. Mr. G ich nehme die Mission an.", "Nein, dass kann ich nicht tun. Es ist zu gefährlich für mich.", optionA1 -> {
                                         if (optionA1) {
 
@@ -58,21 +58,21 @@ public class IntroductionCallDialog extends AbstractDialog {
 
                                         }
                                     });
-                                });
+                                //});
                             });
 
                         }else {
 
                             continueDialog("Mr. G:", "Sehr schön du weißt ja wie das läuft: Du darfst kein Aufsehen erregen." +
                                     " Und vergiss nicht dass das Ziel ist das Gebäude zu zerstören und niemanden zu verletzen. Hier ist noch die Akte der Mission (TAB):", () -> {
-                                missionFileDialog(() -> {
+                                //missionFileDialog(() -> {
                                     continueDialog("Eagle:", "Danke Mr. G Ich werde mich melden, wenn die Mission erfüllt ist. Eagle out.", () -> {
                                         engine.getStateManager().setState(GameState.GAME_INTRODUCED);
                                         engine.getStateManager().setQuest(QuestState.USE_COMPUTER);
                                         spawnScene.getMoneyOverlay().setVisible(true);
                                         exitDialog();
                                     });
-                                });
+                                //});
                             });
 
                         }

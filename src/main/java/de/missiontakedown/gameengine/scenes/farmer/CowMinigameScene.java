@@ -72,8 +72,10 @@ public class CowMinigameScene extends AbstractScene implements GameTick {
             remove(poop);
             repaint();
             engine.getStateManager().addMoney(5);
+            CowMinigameSceneResource.POOP_PICK_UP.create().play();
             poopCount--;
         });
+        CowMinigameSceneResource.COW_POOP.create().play();
 
         poopCount++;
         add(poop);

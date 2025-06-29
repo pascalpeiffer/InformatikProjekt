@@ -57,12 +57,12 @@ public class TitleScene extends AbstractScene implements ScalingEvent {
         if (playHitBox.contains(mouseHit)) {
             clickable = false;
             engine.getStateManager().reset();
-            engine.getGraphics().switchToScene(new SpawnScene(engine), new BlackFade(engine));
+            engine.getGraphics().switchToScene(new SpawnScene(engine), new BlackFade(engine, 400));
         }
 
 
         if (settingsHitBox.contains(mouseHit)) {
-            System.out.println("Settings");
+            engine.getGraphics().switchToScene(new SettingsScene(engine), new BlackFade(engine, 400));
         }
 
         if (exitHitBox.contains(mouseHit)) {

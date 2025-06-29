@@ -118,7 +118,7 @@ public class ComputerScene extends AbstractScene implements ScalingEvent, GameTi
             }
         });
 
-        chooseDialogCooldown = engine.getTickProvider().getTicksPerSecond() * 5;
+        chooseDialogCooldown = engine.getTickProvider().getTicksPerSecond() * 3;
 
         if (engine.getStateManager().getState() == GameState.CLICKED_SALPETER_HYPERLINK) {
             wikiBackground = ComputerSceneResource.WIKIPEDIA_SALPETER_AMMONIAK_MARKED;

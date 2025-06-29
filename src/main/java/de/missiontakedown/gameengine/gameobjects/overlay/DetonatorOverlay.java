@@ -3,7 +3,10 @@ package de.missiontakedown.gameengine.gameobjects.overlay;
 import de.missiontakedown.gameengine.GameEngine;
 import de.missiontakedown.gameengine.dialog.spawn.CallBossDialog;
 import de.missiontakedown.gameengine.gameobjects.AbstractGameObject;
+import de.missiontakedown.gameengine.graphics.fade.BlackFade;
+import de.missiontakedown.gameengine.scenes.headquarter.HeadquarterBombExplodeScene;
 import de.missiontakedown.gameengine.scenes.headquarter.HeadquarterScene;
+import de.missiontakedown.gameengine.scenes.hospital.HospitalScene;
 import de.missiontakedown.gameengine.scenes.spawn.SpawnScene;
 import de.missiontakedown.gameengine.state.GameState;
 import de.missiontakedown.gameengine.state.QuestState;
@@ -75,6 +78,16 @@ public class DetonatorOverlay extends AbstractGameObject {
                 engine.getStateManager().setState(GameState.PLAYER_EXPLODED);
                 engine.getStateManager().setQuest(QuestState.NO_QUEST);
                 HeadquarterSceneResource.EXPLOSION.create().play();
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    SwingUtilities.invokeLater(() -> {
+                        engine.getGraphics().switchToScene(new HeadquarterBombExplodeScene(engine), new BlackFade(engine));
+                    });
+                }).start();
             }
         }
     }

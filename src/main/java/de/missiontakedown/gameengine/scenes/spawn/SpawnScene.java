@@ -296,7 +296,7 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
     }
 
     private void missionFileTick() {
-        if (engine.getStateManager().getState().getId() < GameState.GAME_INTRODUCED.getId()) {
+        if (engine.getStateManager().getState().getId() < GameState.INTRODUCTION_CALL.getId()) {
             return;
         }
 
@@ -304,12 +304,10 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
             if (!missionTakedownFile.isShowing()) {
                 InteractionResource.FILE_INTERACTION.create().play();
                 missionTakedownFile.setVisible(true);
-                player.setMoveable(false);
             }
         }else {
             if (missionTakedownFile.isShowing()) {
                 missionTakedownFile.setVisible(false);
-                player.setMoveable(true);
             }
         }
     }
@@ -440,7 +438,7 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
                     repaint();
                     SpawnSceneResource.DRAW_AND_SHOOT.create().onEnd(() -> {
                         SwingUtilities.invokeLater(() -> {
-                            engine.getGraphics().switchToScene(new GameOverShotDeadScene());
+                            engine.getGraphics().switchToScene(new GameOverShotDeadScene(engine));
                         });
                     }).play();
                 });
@@ -486,7 +484,7 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
                         throw new RuntimeException(e);
                     }
                     SwingUtilities.invokeLater(() -> {
-                        engine.getGraphics().switchToScene(new GameOverShotDeadScene());
+                        engine.getGraphics().switchToScene(new GameOverShotDeadScene(engine));
                     });
                 }).play();
             }

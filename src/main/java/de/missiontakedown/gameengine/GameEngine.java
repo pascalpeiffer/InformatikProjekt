@@ -6,8 +6,13 @@ import de.missiontakedown.gameengine.graphics.fade.AbstractFade;
 import de.missiontakedown.gameengine.graphics.fade.BlackFade;
 import de.missiontakedown.gameengine.inventory.GameInventoryManager;
 import de.missiontakedown.gameengine.inventory.Item;
+import de.missiontakedown.gameengine.scenes.ending.EndingScene;
+import de.missiontakedown.gameengine.scenes.ending.EndingSceneAuthors;
+import de.missiontakedown.gameengine.scenes.headquarter.HeadquarterScene;
 import de.missiontakedown.gameengine.scenes.lab.LabScene;
+import de.missiontakedown.gameengine.scenes.lab.WorkbenchScene;
 import de.missiontakedown.gameengine.scenes.main.TitleScene;
+import de.missiontakedown.gameengine.scenes.spawn.SpawnScene;
 import de.missiontakedown.gameengine.scenes.util.ColorScene;
 import de.missiontakedown.gameengine.state.GameState;
 import de.missiontakedown.gameengine.state.GameStateManager;
@@ -48,7 +53,7 @@ public class GameEngine {
         graphics.start();
         addFullscreenKey();
         graphics.switchToScene(new ColorScene(Color.BLACK));
-        graphics.switchToScene(new TitleScene(this), new BlackFade(this, 300));
+        graphics.switchToScene(new HeadquarterScene(this), new BlackFade(this, 300));
     }
 
     private void addFullscreenKey() {
@@ -72,7 +77,7 @@ public class GameEngine {
 
         //Revert Inv
         getInventoryManager().clearItems();
-        //TODO check items
+
         getInventoryManager().addItem(new Item(Item.Type.Hydrogen));
         getInventoryManager().addItem(new Item(Item.Type.NitricAcid));
         getInventoryManager().addItem(new Item(Item.Type.SulfuricAcid));

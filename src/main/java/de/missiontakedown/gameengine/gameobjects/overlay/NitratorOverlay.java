@@ -116,7 +116,6 @@ public class NitratorOverlay extends AbstractGameObject implements GameTick {
             engine.getTickProvider().unregisterTick(this);
             engine.getStateManager().setState(GameState.NITRATOR_EXPLODED);
             engine.getStateManager().setQuest(QuestState.NO_QUEST);
-            //TODO sound
             engine.getGraphics().switchToScene(new LabScene(engine));
         }
 

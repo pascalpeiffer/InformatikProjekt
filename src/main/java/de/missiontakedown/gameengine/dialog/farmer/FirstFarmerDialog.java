@@ -42,7 +42,7 @@ public class FirstFarmerDialog extends AbstractDialog {
 
                 }else {
 
-                    continueDialog("Bauer:", "Ja genau ich habe Ammoniak von meiner Kuhgülle übrig. Das entsteht nämlich beim Abbau der Kuhscheiße.", () -> {
+                    continueDialog("Bauer:", "Ja genau ich habe Ammoniak von meiner Kuhgülle übrig. Das entsteht nämlich beim Abbau der Gülle.", () -> {
                         continueDialog("Eagle:", "Genau das brauche ich. Außerdem bin ich etwas knapp bei Kasse. Brauchst du vielleicht irgendwie Hilfe auf dem Hof?", () -> {
                             continueDialog("Bauer:", "Hmmm, ich glaube ich hätte da etwas bei dem du mir helfen könntest: Jemand müsste mal wieder die Kuhfladen im Stall wegmachen.", () -> {
                                 optionsDialog("Kuhfladen im Stall wegmachen?", "Ja das kann ich machen...", "Wirklich? Hast du nichts besseres? Vielleicht etwas was weniger stinkt?", (optionA1) -> {
