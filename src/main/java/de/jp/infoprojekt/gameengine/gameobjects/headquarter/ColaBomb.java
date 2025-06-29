@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class ColaBomb extends AbstractGameObject {
 
-    private final GameResource colaBomb = ItemResource.ColaBomb;
+    private final GameResource colaBomb = ItemResource.ColaBomb_NIGHT;
 
     public ColaBomb() {
         update();

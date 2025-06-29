@@ -6,6 +6,7 @@ import de.jp.infoprojekt.gameengine.dialog.lab.EnoughMoneyForSulfuricAcidDialog;
 import de.jp.infoprojekt.gameengine.dialog.lab.NitratorDialog;
 import de.jp.infoprojekt.gameengine.dialog.lab.NitroglycerinInColaDialog;
 import de.jp.infoprojekt.gameengine.gameobjects.interaction.InteractionHint;
+import de.jp.infoprojekt.gameengine.gameobjects.interaction.MissionTakeDownFile;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.InventoryOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.MoneyOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.QuestOverlay;
@@ -13,6 +14,7 @@ import de.jp.infoprojekt.gameengine.gameobjects.player.PlayerCharacter;
 import de.jp.infoprojekt.gameengine.graphics.fade.BlackFade;
 import de.jp.infoprojekt.gameengine.inventory.Item;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
+import de.jp.infoprojekt.gameengine.scenes.hospital.HospitalScene;
 import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
 import de.jp.infoprojekt.gameengine.state.GameState;
 import de.jp.infoprojekt.gameengine.state.QuestState;
@@ -20,7 +22,9 @@ import de.jp.infoprojekt.gameengine.tick.GameTick;
 import de.jp.infoprojekt.resources.GameResource;
 import de.jp.infoprojekt.resources.ResourceManager;
 import de.jp.infoprojekt.resources.ScalingEvent;
+import de.jp.infoprojekt.resources.interaction.InteractionResource;
 import de.jp.infoprojekt.resources.scenes.LabSceneResource;
+import de.jp.infoprojekt.util.FloatPoint;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -29,7 +33,7 @@ public class LabScene extends AbstractScene implements ScalingEvent, GameTick {
 
     private final GameEngine engine;
 
-    private final GameResource backgroundResource = LabSceneResource.BACKGROUND;
+    private GameResource backgroundResource = LabSceneResource.BACKGROUND;
 
     private PlayerCharacter player;
 
@@ -37,19 +41,38 @@ public class LabScene extends AbstractScene implements ScalingEvent, GameTick {
     private InteractionHint workbenchInteractionHint;
     private InteractionHint shelfInteractionHint;
 
+    private MoneyOverlay moneyOverlay;
+    private QuestOverlay questOverlay;
+    private InventoryOverlay inventoryOverlay;
+
+    private MissionTakeDownFile missionTakedownFile;
+
     public LabScene(GameEngine engine) {
         this.engine = engine;
         setLayout(null);
 
-        add(new MoneyOverlay(engine));
-        add(new QuestOverlay(engine));
-        add(new InventoryOverlay(engine));
+        moneyOverlay = new MoneyOverlay(engine);
+        add(moneyOverlay);
+
+        questOverlay = new QuestOverlay(engine);
+        add(questOverlay);
+
+        inventoryOverlay = new InventoryOverlay(engine);
+        add(inventoryOverlay);
+
+        missionTakedownFile = new MissionTakeDownFile();
+        missionTakedownFile.setRelativeLocation(new FloatPoint(0.5f, 0.95f));
+        missionTakedownFile.setVisible(false);
+        add(missionTakedownFile);
+
 
         addGameObjects();
 
         ResourceManager.addScalingListener(this);
 
         repaint();
+
+        nitratorExplodedDelayTick = engine.getTickProvider().getTicksPerSecond() * 2;
     }
 
     private void addGameObjects() {
@@ -81,11 +104,13 @@ public class LabScene extends AbstractScene implements ScalingEvent, GameTick {
         add(player);
     }
 
+    private int nitratorExplodedDelayTick;
     @Override
     public void tick(long currentTick) {
         doorTick(player.getRGBOnBlockArea() == Color.GREEN.getRGB());
         workbenchTick(player.getRGBOnBlockArea() == Color.RED.getRGB());
         shelfTick(player.getRGBOnBlockArea() == Color.BLUE.getRGB());
+        missionFileTick();
 
         if (engine.getStateManager().getState() == GameState.CREATE_OXYGEN) {
             engine.getStateManager().setQuest(QuestState.GET_ELECTROLYSIS);
@@ -102,6 +127,34 @@ public class LabScene extends AbstractScene implements ScalingEvent, GameTick {
             NitroglycerinInColaDialog dialog = new NitroglycerinInColaDialog(engine, this);
             engine.getDialogManager().setDialog(dialog);
             engine.getStateManager().setState(GameState.CREATED_NITRO_GLYCERIN_DIALOG);
+        }
+
+        if (engine.getStateManager().getState() == GameState.NITRATOR_EXPLODED) {
+            if (nitratorExplodedDelayTick > 0) {
+                nitratorExplodedDelayTick--;
+            }else {
+                engine.getTickProvider().unregisterTick(this);
+                engine.getGraphics().switchToScene(new HospitalScene(engine), new BlackFade(engine));
+            }
+        }
+    }
+
+    private void missionFileTick() {
+        if (engine.getStateManager().getState() == GameState.NITRATOR_EXPLODED) {
+            return;
+        }
+
+        if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().OPEN_FILE)) {
+            if (!missionTakedownFile.isShowing()) {
+                InteractionResource.FILE_INTERACTION.create().play();
+                missionTakedownFile.setVisible(true);
+                player.setMoveable(false);
+            }
+        }else {
+            if (missionTakedownFile.isShowing()) {
+                missionTakedownFile.setVisible(false);
+                player.setMoveable(true);
+            }
         }
     }
 
@@ -160,6 +213,7 @@ public class LabScene extends AbstractScene implements ScalingEvent, GameTick {
                         engine.getInventoryManager().removeItem(item);
                     });
                     engine.getStateManager().setState(GameState.PLACED_DISTILLATION_DEVICE);
+                    engine.getStateManager().setQuest(QuestState.NO_QUEST);
                     engine.getGraphics().switchToScene(new WorkbenchScene(engine), new BlackFade(engine));
                 }
             }else if (engine.getStateManager().getState() == GameState.PLACE_NITRATOR) {
@@ -173,6 +227,7 @@ public class LabScene extends AbstractScene implements ScalingEvent, GameTick {
                     engine.getStateManager().setQuest(QuestState.NO_QUEST);
                     NitratorDialog dialog = new NitratorDialog(engine);
                     engine.getDialogManager().setDialog(dialog);
+                    player.setMoveable(false);
                 }
             }
 
@@ -235,6 +290,21 @@ public class LabScene extends AbstractScene implements ScalingEvent, GameTick {
         if (engine.getStateManager().getState() == GameState.BOUGHT_FOG_FLUID) {
             engine.getStateManager().setQuest(QuestState.GET_DESTILLATION_DEVICE);
             engine.getStateManager().setState(GameState.GET_DISTILLATION_DEVICE);
+        }
+
+        if (engine.getStateManager().getState() == GameState.NITRATOR_EXPLODED) {
+            remove(player);
+            engine.getTickProvider().unregisterTick(player);
+            remove(doorInteractionHint);
+            remove(shelfInteractionHint);
+            remove(workbenchInteractionHint);
+
+            remove(moneyOverlay);
+            remove(inventoryOverlay);
+            remove(questOverlay);
+            backgroundResource = LabSceneResource.BACKGROUND_EXPLODED;
+            LabSceneResource.LAP_EXPLOSION.create().play();
+            repaint();
         }
     }
 

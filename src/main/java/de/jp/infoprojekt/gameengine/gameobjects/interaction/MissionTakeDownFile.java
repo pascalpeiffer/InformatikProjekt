@@ -1,7 +1,6 @@
 package de.jp.infoprojekt.gameengine.gameobjects.interaction;
 
 import de.jp.infoprojekt.gameengine.gameobjects.AbstractGameObject;
-import de.jp.infoprojekt.resources.ResourceManager;
 import de.jp.infoprojekt.resources.ScalingEvent;
 import de.jp.infoprojekt.resources.interaction.InteractionResource;
 

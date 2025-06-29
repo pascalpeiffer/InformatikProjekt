@@ -282,6 +282,10 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
     }
 
     private void computerTick(boolean isPlayerNearby) {
+        if (engine.getDialogManager().hasDialog()) {
+            return;
+        }
+
         if (isPlayerNearby && !engine.getDialogManager().hasDialog()) {
 
             if (engine.getStateManager().getState().getId() >= GameState.GAME_INTRODUCED.getId()) {
@@ -362,7 +366,7 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
                 //GOTO Headquarter
                 engine.getGraphics().switchToScene(new TravelScene(engine, true, 5, () -> {
                     engine.getGraphics().switchToScene(new HeadquarterScene(engine), new BlackFade(engine));
-                }), new BlackFade(engine));
+                }).setNight(true), new BlackFade(engine));
             }
         }
 
@@ -417,11 +421,12 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
             engine.getStateManager().setQuest(QuestState.NO_QUEST);
             player.setMoveable(false);
             player.setFlipPlayerImage(false);
-            //TODO first phone call sound
-            SwingUtilities.invokeLater(() -> {
-                FinalDialog finalDialog = new FinalDialog(engine, this);
-                engine.getDialogManager().setDialog(finalDialog);
-            });
+            SpawnSceneResource.DIAL_UP.create().setPan(0.5f).onEnd(() -> {
+                SwingUtilities.invokeLater(() -> {
+                    FinalDialog finalDialog = new FinalDialog(engine, this);
+                    engine.getDialogManager().setDialog(finalDialog);
+                });
+            }).play();
         }
 
         phoneInteractionHint.setVisible(intHint);
@@ -506,6 +511,12 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
         engine.getTickProvider().registerTick(player);
 
         missionRefuseDoorKnockCooldown = engine.getTickProvider().getTicksPerSecond() * 10;
+
+        if (engine.getStateManager().getState() == GameState.RESTED || engine.getStateManager().getState() == GameState.PLACED_BOMB) {
+            player.setNight(true);
+            spawnBackground = SpawnSceneResource.BACKGROUND_NIGHT;
+            repaint();
+        }
     }
 
     @Override

@@ -44,6 +44,10 @@ public class GameInventoryManager {
         return items.remove(item);
     }
 
+    public void clearItems() {
+        items.clear();
+    }
+
     public ObservableList<Item> getItems() {
         return items;
     }

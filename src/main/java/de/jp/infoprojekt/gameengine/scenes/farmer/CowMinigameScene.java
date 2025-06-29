@@ -7,12 +7,15 @@ import de.jp.infoprojekt.gameengine.gameobjects.overlay.QuestOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.TextOverlay;
 import de.jp.infoprojekt.gameengine.graphics.fade.BlackFade;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
+import de.jp.infoprojekt.gameengine.state.QuestState;
 import de.jp.infoprojekt.gameengine.tick.GameTick;
+import de.jp.infoprojekt.resources.GameAudioResource;
 import de.jp.infoprojekt.resources.GameResource;
 import de.jp.infoprojekt.resources.scenes.CowMinigameSceneResource;
 import de.jp.infoprojekt.settings.GAME_SETTINGS;
 import de.jp.infoprojekt.util.FloatPoint;
 
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.util.Random;
 
@@ -85,7 +88,10 @@ public class CowMinigameScene extends AbstractScene implements GameTick {
         }
 
         if (engine.getStateManager().getMoneyCount() >= GAME_SETTINGS.SULFURIC_ACID_COST + GAME_SETTINGS.SMOKE_FLUID_COST) {
-            exitOverlay.setVisible(true);
+            if (!exitOverlay.isVisible()) {
+                exitOverlay.setVisible(true);
+                engine.getStateManager().setQuest(QuestState.NO_QUEST);
+            }
         }
 
         if (poopTick <= 0) {
@@ -98,9 +104,12 @@ public class CowMinigameScene extends AbstractScene implements GameTick {
         }
     }
 
+    private GameAudioResource.Instance cowAmbient;
+
     @Override
     public void sceneShown() {
         super.sceneShown();
+        cowAmbient = CowMinigameSceneResource.COW_AMBIENT.create().loop(Clip.LOOP_CONTINUOUSLY).play();
         engine.getTickProvider().registerTick(this);
         repaint();
     }
@@ -109,6 +118,9 @@ public class CowMinigameScene extends AbstractScene implements GameTick {
     public void sceneHidden() {
         super.sceneHidden();
         engine.getTickProvider().unregisterTick(this);
+        if (cowAmbient.isActive()) {
+            cowAmbient.stop();
+        }
     }
 
     @Override

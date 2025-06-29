@@ -5,6 +5,7 @@ import de.jp.infoprojekt.gameengine.gameobjects.travel.TravelCar;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
 import de.jp.infoprojekt.gameengine.tick.GameTick;
 import de.jp.infoprojekt.resources.GameAudioResource;
+import de.jp.infoprojekt.resources.GameResource;
 import de.jp.infoprojekt.resources.scenes.TravelSceneResource;
 
 import javax.sound.sampled.Clip;
@@ -20,6 +21,11 @@ public class TravelScene extends AbstractScene implements GameTick {
     private final boolean leftToRight;
     private final TravelCar car;
     private final Runnable travelEnd;
+
+    private boolean night = false;
+
+    private final GameResource DAY_BACKGROUND = TravelSceneResource.BACKGROUND;
+    private final GameResource NIGHT_BACKGROUND = TravelSceneResource.BACKGROUND_NIGHT;
 
     public TravelScene(GameEngine engine, boolean leftToRight, int travelTimeInSec, Runnable travelEnd) {
         this.engine = engine;
@@ -91,9 +97,20 @@ public class TravelScene extends AbstractScene implements GameTick {
         }
     }
 
+    public TravelScene setNight(boolean night) {
+        this.night = night;
+        car.setNight(night);
+        repaint();
+        return this;
+    }
+
+    public boolean isNight() {
+        return night;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(TravelSceneResource.BACKGROUND.getResource(), 0, 0,getWidth(), getHeight(), null);
+        g.drawImage(night ? NIGHT_BACKGROUND.getResource() : DAY_BACKGROUND.getResource(), 0, 0,getWidth(), getHeight(), null);
     }
 }

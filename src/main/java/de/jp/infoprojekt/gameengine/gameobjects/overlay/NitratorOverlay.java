@@ -7,6 +7,7 @@ import de.jp.infoprojekt.gameengine.graphics.render.TextRenderer;
 import de.jp.infoprojekt.gameengine.scenes.lab.LabScene;
 import de.jp.infoprojekt.gameengine.scenes.lab.WorkbenchScene;
 import de.jp.infoprojekt.gameengine.state.GameState;
+import de.jp.infoprojekt.gameengine.state.QuestState;
 import de.jp.infoprojekt.gameengine.tick.GameTick;
 import de.jp.infoprojekt.resources.ResourceManager;
 import de.jp.infoprojekt.resources.scenes.LabSceneResource;
@@ -67,6 +68,9 @@ public class NitratorOverlay extends AbstractGameObject implements GameTick {
         }else if (arrowUp.contains(mouseHit)) {
             if (dropsLeft <= 0) return;
             dropRate += 2;
+            if (dropRate > 50) {
+                dropRate = 50;
+            }
             repaint();
         }else if (cooling.contains(mouseHit)) {
             temp = Math.max(18, temp-1);
@@ -98,8 +102,6 @@ public class NitratorOverlay extends AbstractGameObject implements GameTick {
             workbenchScene.getNitrator().setMoving(false);
         }
 
-        System.out.println(dropsLeft);
-
         if (dropsLeft <= 0) {
             dropRate = 0;
             repaint();
@@ -107,6 +109,15 @@ public class NitratorOverlay extends AbstractGameObject implements GameTick {
             LabSceneResource.DONE_DING.create().onEnd(() -> {
                 engine.getGraphics().switchToScene(new LabScene(engine), new BlackFade(engine));
             }).play();
+        }
+
+        if (temp >= 30) {
+            //Nitrator explodes
+            engine.getTickProvider().unregisterTick(this);
+            engine.getStateManager().setState(GameState.NITRATOR_EXPLODED);
+            engine.getStateManager().setQuest(QuestState.NO_QUEST);
+            //TODO sound
+            engine.getGraphics().switchToScene(new LabScene(engine));
         }
 
     }

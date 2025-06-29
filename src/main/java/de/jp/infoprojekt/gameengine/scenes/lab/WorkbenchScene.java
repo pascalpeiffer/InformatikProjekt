@@ -63,7 +63,7 @@ public class WorkbenchScene extends AbstractScene implements ScalingEvent, GameT
 
     private void initNitrator() {
         nitrator = new Nitrator(engine);
-        nitrator.setRelativeLocation(0.5f, 0.67f);
+        nitrator.setRelativeLocation(0.5f, 0.7f);
         nitrator.setVisible(false);
         add(nitrator);
     }
@@ -147,6 +147,15 @@ public class WorkbenchScene extends AbstractScene implements ScalingEvent, GameT
                 }).play();
             });
         }else if (engine.getStateManager().getState() == GameState.PLACED_NITRATOR) {
+            engine.getInventoryManager().findItemByType(Item.Type.Glycerin).ifPresent(item -> {
+                engine.getInventoryManager().removeItem(item);
+            });
+            engine.getInventoryManager().findItemByType(Item.Type.NitricAcid).ifPresent(item -> {
+                engine.getInventoryManager().removeItem(item);
+            });
+            engine.getInventoryManager().findItemByType(Item.Type.SulfuricAcid).ifPresent(item -> {
+                engine.getInventoryManager().removeItem(item);
+            });
             nitrator.setVisible(true);
             nitratorOverlay.setVisible(true);
             engine.getTickProvider().registerTick(nitratorOverlay);

@@ -3,11 +3,14 @@ package de.jp.infoprojekt.gameengine.gameobjects.overlay;
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.dialog.spawn.CallBossDialog;
 import de.jp.infoprojekt.gameengine.gameobjects.AbstractGameObject;
+import de.jp.infoprojekt.gameengine.scenes.headquarter.HeadquarterScene;
 import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
+import de.jp.infoprojekt.gameengine.state.GameState;
 import de.jp.infoprojekt.gameengine.state.QuestState;
 import de.jp.infoprojekt.resources.GameResource;
 import de.jp.infoprojekt.resources.ResourceManager;
 import de.jp.infoprojekt.resources.gameobjects.PlayerResource;
+import de.jp.infoprojekt.resources.scenes.HeadquarterSceneResource;
 import de.jp.infoprojekt.resources.scenes.SpawnSceneResource;
 import de.jp.infoprojekt.util.FloatPoint;
 import de.jp.infoprojekt.util.FloatRectangle;
@@ -57,6 +60,21 @@ public class DetonatorOverlay extends AbstractGameObject {
                         engine.getDialogManager().setDialog(dialog);
                     });
                 }).play();
+            }else if (engine.getGraphics().getCurrentScene() instanceof HeadquarterScene) {
+                HeadquarterScene scene = (HeadquarterScene) engine.getGraphics().getCurrentScene();
+                scene.setBackgroundResource(HeadquarterSceneResource.BACKGROUND_EXPLOSION);
+                scene.repaint();
+                scene.getInventoryOverlay().setVisible(false);
+                scene.getQuestOverlay().setVisible(false);
+                scene.getMoneyOverlay().setVisible(false);
+                scene.getPlayer().setVisible(false);
+                scene.getExitOverlay().setVisible(false);
+                scene.getColaBomb().setVisible(false);
+                scene.getAmbientSound().stop();
+                engine.getDialogManager().unsetDialog();
+                engine.getStateManager().setState(GameState.PLAYER_EXPLODED);
+                engine.getStateManager().setQuest(QuestState.NO_QUEST);
+                HeadquarterSceneResource.EXPLOSION.create().play();
             }
         }
     }

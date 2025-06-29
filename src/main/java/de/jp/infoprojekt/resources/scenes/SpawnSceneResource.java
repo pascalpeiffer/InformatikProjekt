@@ -12,6 +12,7 @@ import de.jp.infoprojekt.resources.GameResource;
 public class SpawnSceneResource {
 
     public static GameResource BACKGROUND = new GameResource("/scenes/spawn/SpawnSceneBackground.png");
+    public static GameResource BACKGROUND_NIGHT = new GameResource("/scenes/spawn/SpawnSceneBackgroundNight.png");
     public static GameResource BACKGROUND_DOOR_HALF = new GameResource("/scenes/spawn/SpawnSceneBackground-DoorHalf.png");
     public static GameResource BACKGROUND_AGENTS = new GameResource("/scenes/spawn/SpawnSceneBackground-Agents.png");
     public static GameResource BACKGROUND_FRIDGE = new GameResource("/scenes/spawn/SpawnWithFridgeOpen.png");
@@ -34,6 +35,7 @@ public class SpawnSceneResource {
     public static GameAudioResource FRIDGE = new GameAudioResource("/scenes/spawn/FridgeOpening.wav", 2f);
 
     public static GameAudioResource BOMB_EXPLODE = new GameAudioResource("/scenes/spawn/BombExplosion.wav", 2f);
+    public static GameAudioResource DIAL_UP = new GameAudioResource("/scenes/spawn/DialUp.wav", 2f);
 
 
 }

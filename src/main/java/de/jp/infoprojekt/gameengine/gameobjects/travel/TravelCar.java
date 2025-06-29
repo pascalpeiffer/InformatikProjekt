@@ -8,9 +8,12 @@ import java.awt.*;
 
 public class TravelCar extends AbstractGameObject {
 
-    private final GameResource carResource = TravelSceneResource.CAR;
+    private final GameResource dayCarResource = TravelSceneResource.CAR;
+    private final GameResource nightCarResource = TravelSceneResource.CAR_NIGHT;
 
     private boolean flipped;
+
+    private boolean night = false;
 
     public TravelCar() {
         setDisableBoundRelative(true);
@@ -20,7 +23,7 @@ public class TravelCar extends AbstractGameObject {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(carResource.getResource(), flipped ? getWidth() : 0, 0, flipped ? -getWidth() : getWidth(), getHeight(), null);
+        g.drawImage(night ? nightCarResource.getResource() : dayCarResource.getResource(), flipped ? getWidth() : 0, 0, flipped ? -getWidth() : getWidth(), getHeight(), null);
     }
 
     @Override
@@ -30,7 +33,7 @@ public class TravelCar extends AbstractGameObject {
     }
 
     public void update() {
-        setSize(carResource.getWidth(), carResource.getHeight());
+        setSize(night ? nightCarResource.getWidth() : dayCarResource.getHeight(), night ? nightCarResource.getHeight() : dayCarResource.getHeight());
         repaint();
     }
 
@@ -40,5 +43,13 @@ public class TravelCar extends AbstractGameObject {
 
     public void setFlipped(boolean flipped) {
         this.flipped = flipped;
+    }
+
+    public void setNight(boolean night) {
+        this.night = night;
+    }
+
+    public boolean isNight() {
+        return night;
     }
 }

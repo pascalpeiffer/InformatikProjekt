@@ -12,6 +12,11 @@ public class GameOverShotDeadScene extends AbstractScene {
 
     public GameOverShotDeadScene() {
         setLayout(null);
+    }
+
+    @Override
+    public void sceneShown() {
+        super.sceneShown();
         GameOverShotDeadSceneResource.GAME_OVER.create().play();
     }
 

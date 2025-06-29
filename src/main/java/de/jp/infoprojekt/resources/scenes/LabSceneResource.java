@@ -7,6 +7,7 @@ public class LabSceneResource {
 
     public static final GameResource BACKGROUND = new GameResource("/scenes/lab/LaboratoryDefault.png");
     public static final GameResource BACKGROUND_ZOOMED = new GameResource("/scenes/lab/LaboratoryZoomed.jpg");
+    public static final GameResource BACKGROUND_EXPLODED = new GameResource("/scenes/lab/LabExploded.png");
     public static final GameResource PLAYER_SPACE = new GameResource("/scenes/lab/LabMapping.png");
 
     public static final GameResource GAUGE1 = new GameResource("/scenes/lab/Gauge1.png", 0.27f, 0.3f);
@@ -30,5 +31,6 @@ public class LabSceneResource {
     public static final GameAudioResource PLACING_OBJECT_TABLE = new GameAudioResource("/scenes/lab/PlacingObjectTable.wav");
     public static final GameAudioResource PLAYER_STEPPING = new GameAudioResource("/scenes/lab/SteppingLaboratory.wav", 0.15f);
     public static final GameAudioResource DROP = new GameAudioResource("/scenes/lab/Drop.wav", 0.5f);
+    public static final GameAudioResource LAP_EXPLOSION = new GameAudioResource("/scenes/lab/LabExplosion.wav", 0.5f);
 
 }

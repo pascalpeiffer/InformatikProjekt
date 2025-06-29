@@ -16,7 +16,7 @@ public class GameStateManager {
 
     private final GameEngine engine;
 
-    private GameState currentGameState = GameState.CALL_G;
+    private GameState currentGameState = GameState.BUY_SULFURIC_ACID;
 
     private final ObjectProperty<QuestState> currentQuest = new SimpleObjectProperty<>(QuestState.NO_QUEST);
 

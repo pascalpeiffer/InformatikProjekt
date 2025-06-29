@@ -32,15 +32,19 @@ public class InteractionHint extends AbstractGameObject implements ScalingEvent 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        Font f = font.deriveFont(40 * ResourceManager.getScaling().getX());
+        FontMetrics metrics = g.getFontMetrics(f);
+
         int interactionHintWidth = getWidth() / 6;
         int interactionHintHeight = getHeight() / 15;
+
+        if (metrics.stringWidth(hint) > interactionHintWidth * 0.8f) {
+            interactionHintWidth = getWidth() / 4;
+        }
 
         int interactionHintBottomDistance = interactionHintHeight / 2;
 
         g.drawImage(DialogResource.DIALOG.getResource(), getWidth() / 2 - interactionHintWidth / 2, getHeight() - interactionHintHeight - interactionHintBottomDistance, interactionHintWidth, interactionHintHeight, null);
-
-        Font f = font.deriveFont(40 * ResourceManager.getScaling().getX());
-        FontMetrics metrics = g.getFontMetrics(f);
 
         TextRenderer.drawFormattedString(g, hint, getWidth() / 2 - metrics.stringWidth(hint) / 2, getHeight() - interactionHintHeight + metrics.getDescent(), 1000, 1000, f, Integer.MAX_VALUE);
     }

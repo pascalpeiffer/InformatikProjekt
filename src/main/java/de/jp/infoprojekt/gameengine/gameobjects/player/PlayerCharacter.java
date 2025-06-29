@@ -38,6 +38,7 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
 
     private float scaling = 1;
 
+    private boolean night;
 
     private GameAudioResource playerSteppingSound;
 
@@ -63,10 +64,10 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
             if (lastMoveTick >= 10) {
                 lastMoveTick = 0;
 
-                if (gameResource == PlayerResource.PLAYER) {
-                    gameResource = PlayerResource.PLAYER_MOVEMENT;
+                if (gameResource == PlayerResource.PLAYER || gameResource == PlayerResource.PLAYER_NIGHT) {
+                    gameResource = night ? PlayerResource.PLAYER_MOVEMENT_NIGHT : PlayerResource.PLAYER_MOVEMENT;
                 }else {
-                    gameResource = PlayerResource.PLAYER;
+                    gameResource = night ? PlayerResource.PLAYER_NIGHT : PlayerResource.PLAYER;
                 }
                 repaint();
             }
@@ -79,6 +80,20 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
 
             if (gameResource == PlayerResource.PLAYER_MOVEMENT) {
                 gameResource = PlayerResource.PLAYER;
+                repaint();
+            }else if (gameResource == PlayerResource.PLAYER_MOVEMENT_NIGHT) {
+                gameResource = PlayerResource.PLAYER_NIGHT;
+                repaint();
+            }
+
+        }
+
+        if (night) {
+            if (gameResource == PlayerResource.PLAYER) {
+                gameResource = PlayerResource.PLAYER_NIGHT;
+                repaint();
+            }else if (gameResource == PlayerResource.PLAYER_MOVEMENT) {
+                gameResource = PlayerResource.PLAYER_MOVEMENT_NIGHT;
                 repaint();
             }
         }
@@ -241,5 +256,14 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
 
     public float getScaling() {
         return scaling;
+    }
+
+    public void setNight(boolean night) {
+        this.night = night;
+        repaint();
+    }
+
+    public boolean isNight() {
+        return night;
     }
 }

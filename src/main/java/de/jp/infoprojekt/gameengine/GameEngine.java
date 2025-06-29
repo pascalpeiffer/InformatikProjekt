@@ -2,7 +2,9 @@ package de.jp.infoprojekt.gameengine;
 
 import de.jp.infoprojekt.gameengine.graphics.GameGraphics;
 import de.jp.infoprojekt.gameengine.graphics.dialog.GameDialogManager;
+import de.jp.infoprojekt.gameengine.graphics.fade.AbstractFade;
 import de.jp.infoprojekt.gameengine.inventory.GameInventoryManager;
+import de.jp.infoprojekt.gameengine.inventory.Item;
 import de.jp.infoprojekt.gameengine.scenes.farmer.CowMinigameScene;
 import de.jp.infoprojekt.gameengine.scenes.farmer.FarmerScene;
 import de.jp.infoprojekt.gameengine.scenes.gameovershotdead.GameOverShotDeadScene;
@@ -11,7 +13,9 @@ import de.jp.infoprojekt.gameengine.scenes.lab.LabScene;
 import de.jp.infoprojekt.gameengine.scenes.lab.WorkbenchScene;
 import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
 import de.jp.infoprojekt.gameengine.scenes.travel.TravelScene;
+import de.jp.infoprojekt.gameengine.state.GameState;
 import de.jp.infoprojekt.gameengine.state.GameStateManager;
+import de.jp.infoprojekt.gameengine.state.QuestState;
 import de.jp.infoprojekt.settings.SettingManager;
 import de.jp.infoprojekt.settings.graphics.WindowTypeSetting;
 import de.jp.infoprojekt.settings.key.KeyMappingSettings;
@@ -67,6 +71,26 @@ public class GameEngine {
                 graphics.updateWindowType();
             }
         });
+    }
+
+    public void rollbackToNitratorScene(AbstractFade fade) {
+        getStateManager().setState(GameState.GET_NITRATOR);
+        getStateManager().setQuest(QuestState.GET_NITRATOR);
+
+        //Revert Inv
+        getInventoryManager().clearItems();
+        //TODO check items
+        getInventoryManager().addItem(new Item(Item.Type.Hydrogen));
+        getInventoryManager().addItem(new Item(Item.Type.NitricAcid));
+        getInventoryManager().addItem(new Item(Item.Type.SulfuricAcid));
+        getInventoryManager().addItem(new Item(Item.Type.ColaEmpty));
+        getInventoryManager().addItem(new Item(Item.Type.Glycerin));
+
+        if (fade == null) {
+            getGraphics().switchToScene(new LabScene(this));
+        }else {
+            getGraphics().switchToScene(new LabScene(this), fade);
+        }
     }
 
     public GameGraphics getGraphics() {

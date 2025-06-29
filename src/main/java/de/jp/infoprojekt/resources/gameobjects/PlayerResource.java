@@ -11,7 +11,9 @@ import de.jp.infoprojekt.resources.GameResource;
 public class PlayerResource {
 
     public static GameResource PLAYER = new GameResource("/player/Player.png", 0.35f, 0.4f);
+    public static GameResource PLAYER_NIGHT = new GameResource("/player/PlayerNight.png", 0.35f, 0.4f);
     public static GameResource PLAYER_MOVEMENT = new GameResource("/player/PlayerMovement.png", 0.35f, 0.4f);
+    public static GameResource PLAYER_MOVEMENT_NIGHT = new GameResource("/player/PlayerMovementNight.png", 0.35f, 0.4f);
 
     public static GameResource MONEY_ICON = new GameResource("/player/MoneyIcon.png", 0.075f);
 

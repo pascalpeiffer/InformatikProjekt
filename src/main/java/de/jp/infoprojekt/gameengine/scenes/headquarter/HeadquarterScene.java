@@ -42,6 +42,10 @@ public class HeadquarterScene extends AbstractScene implements ScalingEvent, Gam
 
     private TextOverlay exitOverlay;
 
+    private final MoneyOverlay moneyOverlay;
+    private final QuestOverlay questOverlay;
+    private final InventoryOverlay inventoryOverlay;
+
     public HeadquarterScene(GameEngine engine) {
         this.engine = engine;
         setLayout(null);
@@ -53,9 +57,14 @@ public class HeadquarterScene extends AbstractScene implements ScalingEvent, Gam
 
         initBombPlaceInteractionHint();
 
-        add(new MoneyOverlay(engine));
-        add(new QuestOverlay(engine));
-        add(new InventoryOverlay(engine));
+        moneyOverlay = new MoneyOverlay(engine);
+        add(moneyOverlay);
+
+        questOverlay = new QuestOverlay(engine);
+        add(questOverlay);
+
+        inventoryOverlay = new InventoryOverlay(engine);
+        add(inventoryOverlay);
 
         initPlayer();
 
@@ -72,7 +81,7 @@ public class HeadquarterScene extends AbstractScene implements ScalingEvent, Gam
             //GOTO Spawn
             engine.getGraphics().switchToScene(new TravelScene(engine, false, 5, () -> {
                 engine.getGraphics().switchToScene(new SpawnScene(engine), new BlackFade(engine));
-            }), new BlackFade(engine));
+            }).setNight(true), new BlackFade(engine));
         });
     }
 
@@ -84,7 +93,7 @@ public class HeadquarterScene extends AbstractScene implements ScalingEvent, Gam
 
     private void initColaBomb() {
         colaBomb = new ColaBomb();
-        colaBomb.setRelativeLocation(0.47f, 0.705f);
+        colaBomb.setRelativeLocation(0.47f, 0.71f);
         colaBomb.setVisible(false);
         add(colaBomb);
     }
@@ -103,6 +112,7 @@ public class HeadquarterScene extends AbstractScene implements ScalingEvent, Gam
         player.setPlayerSteppingSound(LabSceneResource.PLAYER_STEPPING);
         player.setScaling(0.6f);
         player.setPlayerScalingConstant(0.1f);
+        player.setNight(true);
         add(player);
     }
 
@@ -171,5 +181,29 @@ public class HeadquarterScene extends AbstractScene implements ScalingEvent, Gam
 
     public TextOverlay getExitOverlay() {
         return exitOverlay;
+    }
+
+    public void setBackgroundResource(GameResource backgroundResource) {
+        this.backgroundResource = backgroundResource;
+    }
+
+    public MoneyOverlay getMoneyOverlay() {
+        return moneyOverlay;
+    }
+
+    public InventoryOverlay getInventoryOverlay() {
+        return inventoryOverlay;
+    }
+
+    public QuestOverlay getQuestOverlay() {
+        return questOverlay;
+    }
+
+    public GameAudioResource.Instance getAmbientSound() {
+        return ambientSound;
+    }
+
+    public ColaBomb getColaBomb() {
+        return colaBomb;
     }
 }
