@@ -27,7 +27,9 @@ public class TextRenderer {
         colorMap.put('f', new Color(0xFFFFFF));
     }
 
-    public static void drawFormattedString(Graphics g, String text, int x, int y, int maxWidth, int maxHeight, Font mainFont, int renderIndex) {
+    public static int drawFormattedString(Graphics g, String text, int x, int y, int maxWidth, int maxHeight, Font mainFont, int renderIndex) {
+        int maxReachedWidth = 0;
+
         int cursorX = x;
         int cursorY = y;
 
@@ -84,14 +86,18 @@ public class TextRenderer {
             if (cursorX + wordWidth > x + maxWidth) {
                 cursorX = x;
                 cursorY += fm.getHeight();
+            }else {
+                if (cursorX > maxReachedWidth) {
+                    maxReachedWidth = cursorX;
+                }
             }
 
             // Stop if exceeds maxHeight
-            if (cursorY + fm.getHeight() > y + maxHeight) return;
+            if (cursorY + fm.getHeight() > y + maxHeight) return maxReachedWidth;
 
             // Draw word char by char
             for (int j = 0; j < word.length(); j++) {
-                if (visibleCharCount >= renderIndex) return;
+                if (visibleCharCount >= renderIndex) return maxReachedWidth;
 
                 char c = word.charAt(j);
                 int charWidth = fm.charWidth(c);
@@ -112,7 +118,7 @@ public class TextRenderer {
 
             // Handle space
             if (i < text.length() && text.charAt(i) == ' ') {
-                if (visibleCharCount >= renderIndex) return;
+                if (visibleCharCount >= renderIndex) return maxReachedWidth;
 
                 int spaceWidth = fm.charWidth(' ');
                 if (cursorX + spaceWidth > x + maxWidth) {
@@ -123,12 +129,14 @@ public class TextRenderer {
                 }
 
                 // Check height again
-                if (cursorY + fm.getHeight() > y + maxHeight) return;
+                if (cursorY + fm.getHeight() > y + maxHeight) return maxReachedWidth;
 
                 i++;
                 visibleCharCount++;
             }
         }
+
+        return maxReachedWidth;
     }
 
 }

@@ -16,11 +16,12 @@ public class GameStateManager {
 
     private final GameEngine engine;
 
-    private GameState currentGameState = GameState.FIRST_NITRIC_ACID;
+    private GameState currentGameState = GameState.PLACED_NITRATOR;
 
     private final ObjectProperty<QuestState> currentQuest = new SimpleObjectProperty<>(QuestState.NO_QUEST);
 
-    private final SimpleIntegerProperty moneyCount = new SimpleIntegerProperty(200);
+    //TODO set to 200
+    private final SimpleIntegerProperty moneyCount = new SimpleIntegerProperty(520);
 
     public GameStateManager(GameEngine engine) {
         this.engine = engine;
@@ -37,7 +38,9 @@ public class GameStateManager {
     }
 
     public void setQuest(QuestState quest) {
-        QuestResource.NEW_QUEST.create().play();
+        if (quest != QuestState.NO_QUEST) {
+            QuestResource.NEW_QUEST.create().play();
+        }
         currentQuest.set(quest);
     }
 
@@ -55,6 +58,14 @@ public class GameStateManager {
 
     public void setMoneyCount(int moneyCount) {
         this.moneyCount.set(moneyCount);
+    }
+
+    public void addMoney(int moneyCount) {
+        this.moneyCount.set(this.moneyCount.get() + moneyCount);
+    }
+
+    public void removeMoney(int moneyCount) {
+        this.moneyCount.set(this.moneyCount.get() - moneyCount);
     }
 
     public SimpleIntegerProperty moneyCountProperty() {

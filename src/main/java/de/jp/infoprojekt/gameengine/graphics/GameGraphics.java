@@ -90,6 +90,7 @@ public class GameGraphics {
         gameEngine.getDialogManager().unsetDialog();
         frame.setContentPane(currentScene);
         currentScene.sceneShown();
+        applyNewSize();
     }
 
     public void switchToScene(AbstractScene scene, AbstractFade fader) {

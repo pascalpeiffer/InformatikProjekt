@@ -1,16 +1,21 @@
 package de.jp.infoprojekt.gameengine.scenes.spawn;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
+import de.jp.infoprojekt.gameengine.dialog.spawn.ColaGlycerinDialog;
+import de.jp.infoprojekt.gameengine.dialog.spawn.RememberFogFluidDialog;
 import de.jp.infoprojekt.gameengine.dialog.spawn.IntroductionCallDialog;
 import de.jp.infoprojekt.gameengine.gameobjects.interaction.MissionTakeDownFile;
+import de.jp.infoprojekt.gameengine.gameobjects.overlay.InventoryOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.MoneyOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.QuestOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.player.PlayerCharacter;
 import de.jp.infoprojekt.gameengine.gameobjects.interaction.InteractionHint;
 import de.jp.infoprojekt.gameengine.graphics.fade.BlackFade;
+import de.jp.infoprojekt.gameengine.inventory.Item;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
 import de.jp.infoprojekt.gameengine.scenes.farmer.FarmerScene;
 import de.jp.infoprojekt.gameengine.scenes.gameovershotdead.GameOverShotDeadScene;
+import de.jp.infoprojekt.gameengine.scenes.lab.LabScene;
 import de.jp.infoprojekt.gameengine.scenes.travel.TravelScene;
 import de.jp.infoprojekt.gameengine.scenes.util.ColorScene;
 import de.jp.infoprojekt.gameengine.state.GameState;
@@ -46,6 +51,7 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
     private InteractionHint phoneInteractionHint;
     private InteractionHint computerInteractionHint;
     private InteractionHint doorInteractionHint;
+    private InteractionHint fridgeInteractionHint;
 
     public SpawnScene(GameEngine engine) {
         this.engine = engine;
@@ -56,7 +62,7 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
         ResourceManager.addScalingListener(this);
 
 
-        //TODO TEMP
+        //TODO remove TEMP
         if (engine.getStateManager().getState().getId() == GameState.GAME_INTRODUCED.getId()) {
             engine.getStateManager().setQuest(QuestState.USE_COMPUTER);
         }
@@ -68,10 +74,22 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
         initMissionTakedownFile();
         initQuestOverlay();
         initMoneyOverlay();
+        initInventoryOverlay();
+        initFridgeInteractionHint();
         initDoorInteractionHint();
         initComputerInteractionHint();
         initPhoneInteractionHint();
         initPlayer();
+    }
+
+    private void initFridgeInteractionHint() {
+        fridgeInteractionHint = new InteractionHint("Kühlschrank" +" (" + KeyEvent.getKeyText(engine.getKeyMappingSettings().INTERACT) + ")");
+        fridgeInteractionHint.setVisible(false);
+        add(fridgeInteractionHint);
+    }
+
+    private void initInventoryOverlay() {
+        add(new InventoryOverlay(engine));
     }
 
     private void initQuestOverlay() {
@@ -80,7 +98,7 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
     }
 
     private void initDoorInteractionHint() {
-        doorInteractionHint = new InteractionHint("Door" +" (" + KeyEvent.getKeyText(engine.getKeyMappingSettings().INTERACT) + ")");
+        doorInteractionHint = new InteractionHint("Tür" +" (" + KeyEvent.getKeyText(engine.getKeyMappingSettings().INTERACT) + ")");
         doorInteractionHint.setVisible(false);
         add(doorInteractionHint);
     }
@@ -126,15 +144,77 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
 
     @Override
     public void tick(long tick) {
+        backFromFarmerTick();
         phoneTick(player.getRGBOnBlockArea() == Color.RED.getRGB());
         doorTick(player.getRGBOnBlockArea() == Color.GREEN.getRGB());
         missionFileTick();
         missionRefuseTick();
         computerTick(player.getRGBOnBlockArea() == Color.BLUE.getRGB());
+        fridgeTick(player.getRGBOnBlockArea() == new Color(255,0,255).getRGB());
+        boughtSulfuricAcidTick();
+    }
+
+    private int fridgeColaCooldown;
+    private void fridgeTick(boolean isPlayerNearby) {
+        boolean intHint = false;
+
+        if (engine.getStateManager().getState() == GameState.NEED_COLA && isPlayerNearby) {
+            intHint = true;
+            if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+                if (spawnBackground != SpawnSceneResource.BACKGROUND_FRIDGE) {
+                    spawnBackground = SpawnSceneResource.BACKGROUND_FRIDGE;
+                    repaint();
+                    fridgeColaCooldown = (int) (engine.getTickProvider().getTicksPerSecond() * 0.5f);
+                    SpawnSceneResource.FRIDGE.create().play();
+                }
+            }
+
+            if (spawnBackground == SpawnSceneResource.BACKGROUND_FRIDGE) {
+                if (fridgeColaCooldown > 0) {
+                    intHint = false;
+                    fridgeColaCooldown--;
+                }else {
+                    if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+                        //Drink Cola
+                        spawnBackground = SpawnSceneResource.BACKGROUND;
+                        engine.getInventoryManager().addItem(new Item(Item.Type.ColaEmpty));
+                        engine.getStateManager().setState(GameState.DRANK_COLA);
+                        engine.getStateManager().setQuest(QuestState.NO_QUEST);
+                        SpawnSceneResource.COLA_DRINK.create().onEnd(() -> {
+                            //After sound
+                            RememberFogFluidDialog dialog = new RememberFogFluidDialog(engine, this);
+                            engine.getDialogManager().setDialog(dialog);
+                            engine.getStateManager().setState(GameState.REMEMBER_FOG_FLUID);
+                        }).play();
+                    }
+                }
+            }
+        }
+
+        fridgeInteractionHint.setVisible(intHint);
+    }
+
+    private void boughtSulfuricAcidTick() {
+        if (engine.getStateManager().getState() == GameState.BUY_SULFURIC_ACID) {
+            if (engine.getInventoryManager().findItemByType(Item.Type.SulfuricAcid).isPresent()) {
+                ColaGlycerinDialog dialog = new ColaGlycerinDialog(engine, this);
+                engine.getDialogManager().setDialog(dialog);
+                engine.getStateManager().setState(GameState.BOUGHT_SULFURIC_ACID);
+            }
+        }
+
+
+    }
+
+    private void backFromFarmerTick() {
+        if (engine.getStateManager().getState() == GameState.EARNING_MONEY) {
+            engine.getStateManager().setState(GameState.CREATE_OXYGEN);
+            engine.getStateManager().setQuest(QuestState.CREATE_OXYGEN);
+        }
     }
 
     private void computerTick(boolean isPlayerNearby) {
-        if (isPlayerNearby) {
+        if (isPlayerNearby && !engine.getDialogManager().hasDialog()) {
 
             if (engine.getStateManager().getState().getId() >= GameState.GAME_INTRODUCED.getId()) {
                 computerInteractionHint.setVisible(true);
@@ -175,6 +255,7 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
         boolean intHint = false;
 
         if (engine.getStateManager().getState() == GameState.MISSION_REFUSED_DOOR_KNOCKED && isPlayerNearby) {
+            intHint = true;
             if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
                 engine.getStateManager().setState(GameState.MISSION_REFUSED_DOOR_ANSWERED);
             }
@@ -185,9 +266,25 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
             if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
                 intHint = false;
                 //Goto Farmer
-                engine.getGraphics().switchToScene(new TravelScene(engine, true, 10, () -> {
-                    engine.getGraphics().switchToScene(new FarmerScene(engine));
+                engine.getGraphics().switchToScene(new TravelScene(engine, true, 5, () -> {
+                    engine.getGraphics().switchToScene(new FarmerScene(engine), new BlackFade(engine));
                 }), new BlackFade(engine));
+            }
+        }
+
+        if (engine.getStateManager().getState() == GameState.CREATE_OXYGEN && isPlayerNearby) {
+            intHint = true;
+            if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+                //GOTO Lab
+                engine.getGraphics().switchToScene(new LabScene(engine), new BlackFade(engine));
+            }
+        }
+
+        if (engine.getStateManager().getState() == GameState.BOUGHT_FOG_FLUID && isPlayerNearby) {
+            intHint = true;
+            if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+                //GOTO Lab
+                engine.getGraphics().switchToScene(new LabScene(engine), new BlackFade(engine));
             }
         }
 
@@ -327,8 +424,10 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.drawImage(spawnBackground.getResource(), 0, 0, getWidth(), getHeight(), null);
 
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-        g2d.drawImage(SpawnSceneResource.PLAYER_SPACE.getResource(), 0, 0, getWidth(), getHeight(), null);
+        //g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+        //g2d.drawImage(SpawnSceneResource.PLAYER_SPACE.getResource(), 0, 0, getWidth(), getHeight(), null);
+
+        g2d.dispose();
     }
 
     @Override

@@ -207,8 +207,8 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
 
         g.drawImage(gameResource.getResource(), x, y, width, height, null);
 
-        g.setColor(Color.GREEN);
-        g.fillRect(getWidth() / 2 - 1, getHeight() - 3, 2, 2);
+        //g.setColor(Color.GREEN);
+        //g.fillRect(getWidth() / 2 - 1, getHeight() - 3, 2, 2);
     }
 
     @Override

@@ -35,6 +35,10 @@ public class QuestOverlay extends AbstractGameObject implements ScalingEvent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        if (questText.isEmpty()) {
+            return;
+        }
+
         int frameWidth = (int) (((float) getHeight() / QuestResource.QUEST_FRAME1.getResource().getHeight()) * QuestResource.QUEST_FRAME1.getResource().getWidth());
 
         float amount = (float) getWidth() / frameWidth;

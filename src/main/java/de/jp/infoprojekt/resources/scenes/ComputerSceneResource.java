@@ -1,5 +1,6 @@
 package de.jp.infoprojekt.resources.scenes;
 
+import de.jp.infoprojekt.resources.GameAudioResource;
 import de.jp.infoprojekt.resources.GameResource;
 
 public class ComputerSceneResource {
@@ -17,5 +18,9 @@ public class ComputerSceneResource {
 
     public static GameResource AMAZON = new GameResource("/scenes/computer/Amazon.png", 0.2f);
     public static GameResource WIKIPEDIA = new GameResource("/scenes/computer/Wikipedia.png", 0.2f);
+
+    public static GameAudioResource AMAZON_BUY = new GameAudioResource("/scenes/computer/AmazonBuyComplete.wav");
+
+    public static GameAudioResource COMPUTER_CLICk = new GameAudioResource("/scenes/computer/MouseClick.wav");
 
 }

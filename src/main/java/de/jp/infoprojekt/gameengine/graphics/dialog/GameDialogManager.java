@@ -32,4 +32,8 @@ public class GameDialogManager {
     public AbstractDialog getCurrentDialog() {
         return currentDialog;
     }
+
+    public boolean hasDialog() {
+        return currentDialog != null;
+    }
 }

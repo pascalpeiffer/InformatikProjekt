@@ -2,7 +2,12 @@ package de.jp.infoprojekt.gameengine;
 
 import de.jp.infoprojekt.gameengine.graphics.GameGraphics;
 import de.jp.infoprojekt.gameengine.graphics.dialog.GameDialogManager;
+import de.jp.infoprojekt.gameengine.inventory.GameInventoryManager;
+import de.jp.infoprojekt.gameengine.scenes.farmer.CowMinigameScene;
+import de.jp.infoprojekt.gameengine.scenes.farmer.FarmerScene;
 import de.jp.infoprojekt.gameengine.scenes.gameovershotdead.GameOverShotDeadScene;
+import de.jp.infoprojekt.gameengine.scenes.lab.LabScene;
+import de.jp.infoprojekt.gameengine.scenes.lab.WorkbenchScene;
 import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
 import de.jp.infoprojekt.gameengine.scenes.travel.TravelScene;
 import de.jp.infoprojekt.gameengine.state.GameStateManager;
@@ -22,11 +27,12 @@ public class GameEngine {
 
     private static final int ticksPerSecond = 100;
 
-    private GameGraphics graphics;
-    private GameStateManager stateManager;
-    private GameKeyHandler gameKeyHandler;
-    private GameTickProvider tickProvider;
-    private GameDialogManager dialogManager;
+    private final GameGraphics graphics;
+    private final GameStateManager stateManager;
+    private final GameKeyHandler gameKeyHandler;
+    private final GameTickProvider tickProvider;
+    private final GameDialogManager dialogManager;
+    private final GameInventoryManager inventoryManager;
 
     private final KeyMappingSettings keyMappingSettings;
 
@@ -38,11 +44,12 @@ public class GameEngine {
         dialogManager = new GameDialogManager(this);
         gameKeyHandler = new GameKeyHandler(this);
         stateManager = new GameStateManager(this);
+        inventoryManager = new GameInventoryManager(this);
     }
 
     public void start() {
         graphics.start();
-        graphics.switchToScene(new SpawnScene(this));
+        graphics.switchToScene(new WorkbenchScene(this));
         addFullscreenKey();
     }
 
@@ -83,5 +90,9 @@ public class GameEngine {
 
     public KeyMappingSettings getKeyMappingSettings() {
         return keyMappingSettings;
+    }
+
+    public GameInventoryManager getInventoryManager() {
+        return inventoryManager;
     }
 }

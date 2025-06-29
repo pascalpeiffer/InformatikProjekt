@@ -14,6 +14,7 @@ public class SpawnSceneResource {
     public static GameResource BACKGROUND = new GameResource("/scenes/spawn/SpawnSceneBackground.png");
     public static GameResource BACKGROUND_DOOR_HALF = new GameResource("/scenes/spawn/SpawnSceneBackground-DoorHalf.png");
     public static GameResource BACKGROUND_AGENTS = new GameResource("/scenes/spawn/SpawnSceneBackground-Agents.png");
+    public static GameResource BACKGROUND_FRIDGE = new GameResource("/scenes/spawn/SpawnWithFridgeOpen.png");
 
     public static GameResource PLAYER_SPACE = new GameResource("/scenes/spawn/SpawnSceneUsablePlayerSpace.png");
 
@@ -27,6 +28,10 @@ public class SpawnSceneResource {
 
     public static GameAudioResource DOOR_KICKDOWN = new GameAudioResource("/scenes/spawn/DoorKickdown.wav", 0.6f);
     public static GameAudioResource FLASH_BANG_AND_BEEP = new GameAudioResource("/scenes/spawn/FlashBangAndBeep.wav");
+
+    public static GameAudioResource COLA_DRINK = new GameAudioResource("/scenes/spawn/ColaDrinking.wav");
+
+    public static GameAudioResource FRIDGE = new GameAudioResource("/scenes/spawn/FridgeOpening.wav", 2f);
 
 
 }

@@ -97,6 +97,14 @@ public class GameAudioResource {
             return this;
         }
 
+        public float getVolume() {
+            FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            if (volumeControl != null) {
+                return (float) Math.pow(10, volumeControl.getValue() / 20f);
+            }
+            return initialVolume;
+        }
+
         public Instance loop(int cound) {
             clip.loop(cound);
             return this;

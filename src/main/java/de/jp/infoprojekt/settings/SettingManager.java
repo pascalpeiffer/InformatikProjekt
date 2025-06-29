@@ -46,9 +46,9 @@ public class SettingManager implements Serializable {
             FileManager.serializeToFile(SettingManager.getInstance(), "./settings.conf");
         } catch (IOException e) {
             System.err.println("Failed to save Settings!");
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     public JSONObject serialize() {

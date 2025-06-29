@@ -1,13 +1,17 @@
 package de.jp.infoprojekt.gameengine.scenes.spawn;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
+import de.jp.infoprojekt.gameengine.dialog.computer.ColaInFridgeDialog;
 import de.jp.infoprojekt.gameengine.dialog.spawn.ChooseRecipeDialog;
 import de.jp.infoprojekt.gameengine.dialog.spawn.TooLessMoneyForSulfuricDialog;
 import de.jp.infoprojekt.gameengine.gameobjects.computer.AmazonIcon;
 import de.jp.infoprojekt.gameengine.gameobjects.computer.WikipediaIcon;
+import de.jp.infoprojekt.gameengine.gameobjects.interaction.InteractionHint;
+import de.jp.infoprojekt.gameengine.gameobjects.overlay.InventoryOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.MoneyOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.QuestOverlay;
 import de.jp.infoprojekt.gameengine.graphics.fade.BlackFade;
+import de.jp.infoprojekt.gameengine.inventory.Item;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
 import de.jp.infoprojekt.gameengine.state.GameState;
 import de.jp.infoprojekt.gameengine.state.QuestState;
@@ -38,7 +42,8 @@ public class ComputerScene extends AbstractScene implements ScalingEvent, GameTi
 
     //Amazon Hits //TODO easter egg
     private FloatRectangle sulfuricAcid;
-    private FloatRectangle fogJuice;
+    private FloatRectangle fogFluid;
+    private FloatRectangle cola;
 
     //Wiki Hits
     private FloatRectangle salpeterHyperlink;
@@ -49,6 +54,9 @@ public class ComputerScene extends AbstractScene implements ScalingEvent, GameTi
 
     private State computerState = State.DESKTOP;
 
+    private final InteractionHint hint;
+    private int hintShowTicks = 0;
+
     public ComputerScene(GameEngine engine, FloatPoint playerPos) {
         this.oldPlayerPos = playerPos;
         this.engine = engine;
@@ -57,11 +65,17 @@ public class ComputerScene extends AbstractScene implements ScalingEvent, GameTi
 
         initMoneyOverlay();
         initQuestOverlay();
+        initInventoryOverlay();
+
+        hint = new InteractionHint("");
+        hint.setVisible(false);
+        add(hint);
 
         exitButton = new FloatRectangle(0.8f, 0.12f, 0.05f, 0.03f);
 
         sulfuricAcid = new FloatRectangle(0.5f, 0.465f, 0.05f, 0.035f);
-        fogJuice = new FloatRectangle(0.27f,0.72f,0.05f, 0.035f);
+        fogFluid = new FloatRectangle(0.27f,0.72f,0.05f, 0.035f);
+        cola = new FloatRectangle(0.28f,0.46f,0.05f, 0.035f);
 
         salpeterHyperlink = new FloatRectangle(0.53f,0.66f,0.09f,0.04f);
         ammoniakHyperlink = new FloatRectangle(0.67f, 0.55f, 0.06f, 0.04f);
@@ -113,9 +127,13 @@ public class ComputerScene extends AbstractScene implements ScalingEvent, GameTi
         }
     }
 
+    private void initInventoryOverlay() {
+        add(new InventoryOverlay(engine));
+    }
+
     private void onMouseClick(FloatPoint mouseHit) {
 
-        //System.out.println(mouseHit);
+        ComputerSceneResource.COMPUTER_CLICk.create().play();
 
         //Exit button hit
         if (exitButton.contains(mouseHit)) {
@@ -127,14 +145,58 @@ public class ComputerScene extends AbstractScene implements ScalingEvent, GameTi
             }
         }
 
+        if (computerState == State.AMAZON) {
+            if (cola.contains(mouseHit)) {
+                ColaInFridgeDialog dialog = new ColaInFridgeDialog(engine);
+                engine.getDialogManager().setDialog(dialog);
+            }
+        }
+
         //Buy button - Amazon
         if (computerState == State.AMAZON) {
 
             if (sulfuricAcid.contains(mouseHit)) {
-
+                if (engine.getStateManager().getMoneyCount() >= GAME_SETTINGS.SULFURIC_ACID_COST) {
+                    hint.setHint("Schwefelsäure gekauft");
+                    hintShowTicks = engine.getTickProvider().getTicksPerSecond() * 4;
+                    hint.setVisible(true);
+                    repaint();
+                    engine.getStateManager().removeMoney(GAME_SETTINGS.SULFURIC_ACID_COST);
+                    engine.getInventoryManager().addItem(new Item(Item.Type.SulfuricAcid));
+                    ComputerSceneResource.AMAZON_BUY.create().play();
+                }else {
+                    hint.setHint("Nicht genug Geld!");
+                    hintShowTicks = engine.getTickProvider().getTicksPerSecond() * 4;
+                    hint.setVisible(true);
+                    repaint();
+                }
             }
 
-            if (fogJuice.contains(mouseHit)) {
+            if (fogFluid.contains(mouseHit)) {
+
+                if (engine.getStateManager().getState() == GameState.BUY_FOG_FLUID) {
+                    if (engine.getStateManager().getMoneyCount() >= GAME_SETTINGS.SMOKE_FLUID_COST) {
+                        hint.setHint("Nebelfluid gekauft");
+                        hintShowTicks = engine.getTickProvider().getTicksPerSecond() * 4;
+                        hint.setVisible(true);
+                        repaint();
+                        engine.getStateManager().removeMoney(GAME_SETTINGS.SMOKE_FLUID_COST);
+                        engine.getInventoryManager().addItem(new Item(Item.Type.FogFluid));
+                        engine.getStateManager().setState(GameState.BOUGHT_FOG_FLUID);
+                        engine.getStateManager().setQuest(QuestState.BOUGHT_FOG_FLUID);
+                        ComputerSceneResource.AMAZON_BUY.create().play();
+                    }else {
+                        hint.setHint("Nicht genug Geld!");
+                        hintShowTicks = engine.getTickProvider().getTicksPerSecond() * 4;
+                        hint.setVisible(true);
+                        repaint();
+                    }
+                }else {
+                    hint.setHint("Kann nicht gekauft werden!");
+                    hintShowTicks = engine.getTickProvider().getTicksPerSecond() * 4;
+                    hint.setVisible(true);
+                    repaint();
+                }
 
             }
 
@@ -162,14 +224,22 @@ public class ComputerScene extends AbstractScene implements ScalingEvent, GameTi
     }
 
     private void initQuestOverlay() {
-        QuestOverlay questOverlay = new QuestOverlay(engine);
-        add(questOverlay);
+        add(new QuestOverlay(engine));
     }
 
     private int chooseDialogCooldown;
     @Override
     public void tick(long currentTick) {
         computerEscapeTick();
+
+        if (hintShowTicks <= 0) {
+            if (hint.isVisible()) {
+                hint.setVisible(false);
+                repaint();
+            }
+        }else {
+            hintShowTicks--;
+        }
 
         if (engine.getStateManager().getState() == GameState.FIRST_NITRIC_ACID) {
             if (wikiBackground != ComputerSceneResource.WIKIPEDIA_NITROGLYCERIN_SALPETER_MARKED) {

@@ -13,7 +13,6 @@ public class TravelCar extends AbstractGameObject {
     private boolean flipped;
 
     public TravelCar() {
-        setDisableLocationFix(true);
         setDisableBoundRelative(true);
         update();
     }
@@ -22,8 +21,6 @@ public class TravelCar extends AbstractGameObject {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(carResource.getResource(), flipped ? getWidth() : 0, 0, flipped ? -getWidth() : getWidth(), getHeight(), null);
-        g.setColor(Color.RED);
-        g.drawRect(0, 0, getWidth() -1,getHeight()-1);
     }
 
     @Override
@@ -32,7 +29,7 @@ public class TravelCar extends AbstractGameObject {
         super.scale(widthMultiply, heightMultiply);
     }
 
-    private void update() {
+    public void update() {
         setSize(carResource.getWidth(), carResource.getHeight());
         repaint();
     }

@@ -1,5 +1,7 @@
 package de.jp.infoprojekt.util;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class FloatPoint {
 
     private float x;
@@ -32,4 +34,18 @@ public class FloatPoint {
     public String toString() {
         return "FloatPoint X: " + getX() + " Y: " + getY();
     }
+
+    public static FloatPoint getRandomPointBetween(FloatPoint a, FloatPoint b) {
+        float t = (float) ThreadLocalRandom.current().nextDouble();
+        float x = a.x + t * (b.x - a.x);
+        float y = a.y + t * (b.y - a.y);
+        return new FloatPoint(x, y);
+    }
+
+    public static float distance(FloatPoint a, FloatPoint b) {
+        float dx = b.x - a.x;
+        float dy = b.y - a.y;
+        return (float) Math.sqrt(dx * dx + dy * dy);
+    }
+
 }

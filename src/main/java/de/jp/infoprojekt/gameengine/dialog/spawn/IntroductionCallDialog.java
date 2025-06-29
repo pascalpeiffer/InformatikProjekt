@@ -27,7 +27,7 @@ public class IntroductionCallDialog extends AbstractDialog {
         spawnScene.getPlayer().setMoveable(false);
         continueDialog("Mr. G:", "Hallo Eagle! Ich habe einen Auftrag für dich. Er ist etwas riskanter, aber ich glaube für dich sollte er kein Problem darstellen.", () -> {
             continueDialog("Eagle:", "Hört sich interessant an, worum geht es denn?", () -> {
-                continueDialog("Mr. G:", "Du musst deine chemische Kenntnisse einsetzen, um ein Strategisch wichiges Ziel auszuschalten: Die Führungsstelle der repressiven Regierung. Wenn du es schaffst, werden wir die möglichkeit haben die Unterdrückung zu beenden.", () -> {
+                continueDialog("Mr. G:", "Du musst deine chemische Kenntnisse einsetzen, um ein Strategisch wichtiges Ziel auszuschalten: Die Führungsstelle der repressiven Regierung. Wenn du es schaffst, werden wir die möglichkeit haben die Unterdrückung zu beenden.", () -> {
                     optionsDialog("Mr.G: Nimmst du den Auftrag an Eagle?", "Mr. G das sind mir zu wenige Informationen, ich werde erst bestätigen wenn ich mehr weiß.", "Ja ich nehme den Auftrag an.", optionA -> {
                         if (optionA) {
 

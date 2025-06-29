@@ -24,6 +24,11 @@ public class InteractionHint extends AbstractGameObject implements ScalingEvent 
     }
 
     @Override
+    public boolean contains(int x, int y) {
+        return false;
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -37,7 +42,7 @@ public class InteractionHint extends AbstractGameObject implements ScalingEvent 
         Font f = font.deriveFont(40 * ResourceManager.getScaling().getX());
         FontMetrics metrics = g.getFontMetrics(f);
 
-        TextRenderer.drawFormattedString(g, hint, getWidth() / 2 - metrics.stringWidth(hint) / 2, getHeight() - interactionHintHeight + metrics.getDescent(), 300, 300, f, Integer.MAX_VALUE);
+        TextRenderer.drawFormattedString(g, hint, getWidth() / 2 - metrics.stringWidth(hint) / 2, getHeight() - interactionHintHeight + metrics.getDescent(), 1000, 1000, f, Integer.MAX_VALUE);
     }
 
     @Override

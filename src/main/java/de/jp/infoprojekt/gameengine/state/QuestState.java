@@ -9,7 +9,24 @@ public enum QuestState {
 
     BUY_SULFURIC_ACID("Bestelle Schwelsäure"),
 
-    GO_TO_FARMER("Fahre zum Bauernhof um Ammoniak zu besorgen");
+    GO_TO_FARMER("Fahre zum Bauernhof um Ammoniak zu besorgen"),
+    EARN_MONEY("Spare auf mindestens 520 Euro"),
+
+    CREATE_OXYGEN("Stelle Sauerstoff her (Im Labor)"),
+    GET_ELECTROLYSIS("Nimm das Elektrolysegerät aus dem Regal"),
+    PLACE_ELECTROLYSIS("Plaziere das Elektrolysegerät auf der Werkbank"),
+
+    GET_SALPTERGEN("Finde den Salpetersäuregenerator und stelle ihn auf die Werkbank"),
+    PLACE_SALPTERGEN("Plaziere das Salpetersäuregenerator auf der Werkbank"),
+
+    NEED_COLA("Ich brauche eine Cola!"),
+
+    BUY_FOG_FLUID("Bestelle das Nebelfluid"),
+    BOUGHT_FOG_FLUID("Nimm das Nebelfluid und destilliere es im Labor"),
+    GET_DESTILLATION_DEVICE("Finde die Destille und Platziere sie auf der Werkbank"),
+    PLACE_DESTILLATION_DEVICE("Destille Platzieren und Nebelfluid reingießen"),
+    GET_NITRATOR("Finde den Nitrator und platziere ihn auf der Werkbank"),
+    PLACE_NITRATOR("Plaziere den Nitrator auf der Werkbank");
 
     private final String questText;
 
