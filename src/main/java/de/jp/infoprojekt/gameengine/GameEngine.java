@@ -6,6 +6,7 @@ import de.jp.infoprojekt.gameengine.inventory.GameInventoryManager;
 import de.jp.infoprojekt.gameengine.scenes.farmer.CowMinigameScene;
 import de.jp.infoprojekt.gameengine.scenes.farmer.FarmerScene;
 import de.jp.infoprojekt.gameengine.scenes.gameovershotdead.GameOverShotDeadScene;
+import de.jp.infoprojekt.gameengine.scenes.headquarter.HeadquarterScene;
 import de.jp.infoprojekt.gameengine.scenes.lab.LabScene;
 import de.jp.infoprojekt.gameengine.scenes.lab.WorkbenchScene;
 import de.jp.infoprojekt.gameengine.scenes.spawn.SpawnScene;
@@ -49,7 +50,7 @@ public class GameEngine {
 
     public void start() {
         graphics.start();
-        graphics.switchToScene(new WorkbenchScene(this));
+        graphics.switchToScene(new SpawnScene(this));
         addFullscreenKey();
     }
 

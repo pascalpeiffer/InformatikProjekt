@@ -6,7 +6,7 @@ public class ItemResource {
 
     public static final GameResource AcidGen = new GameResource("/item/AcidGen.png", 0.5f);
     public static final GameResource Amoniak = new GameResource("/item/Amoniak.png");
-    public static final GameResource ColaBomb = new GameResource("/item/ColaBomb.png");
+    public static final GameResource ColaBomb = new GameResource("/item/ColaBomb.png", 0.05f);
     public static final GameResource ColaEmpty = new GameResource("/item/ColaEmpty.png");
     public static final GameResource Distillation = new GameResource("/item/Distillation.png", 1.5f);
     public static final GameResource Electrolysis = new GameResource("/item/Electrolysis.png", 0.5f);

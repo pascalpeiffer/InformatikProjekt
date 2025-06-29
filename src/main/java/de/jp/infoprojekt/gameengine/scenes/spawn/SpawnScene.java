@@ -2,9 +2,11 @@ package de.jp.infoprojekt.gameengine.scenes.spawn;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.dialog.spawn.ColaGlycerinDialog;
+import de.jp.infoprojekt.gameengine.dialog.spawn.FinalDialog;
 import de.jp.infoprojekt.gameengine.dialog.spawn.RememberFogFluidDialog;
 import de.jp.infoprojekt.gameengine.dialog.spawn.IntroductionCallDialog;
 import de.jp.infoprojekt.gameengine.gameobjects.interaction.MissionTakeDownFile;
+import de.jp.infoprojekt.gameengine.gameobjects.overlay.DetonatorOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.InventoryOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.MoneyOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.QuestOverlay;
@@ -15,6 +17,7 @@ import de.jp.infoprojekt.gameengine.inventory.Item;
 import de.jp.infoprojekt.gameengine.scenes.AbstractScene;
 import de.jp.infoprojekt.gameengine.scenes.farmer.FarmerScene;
 import de.jp.infoprojekt.gameengine.scenes.gameovershotdead.GameOverShotDeadScene;
+import de.jp.infoprojekt.gameengine.scenes.headquarter.HeadquarterScene;
 import de.jp.infoprojekt.gameengine.scenes.lab.LabScene;
 import de.jp.infoprojekt.gameengine.scenes.travel.TravelScene;
 import de.jp.infoprojekt.gameengine.scenes.util.ColorScene;
@@ -47,11 +50,14 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
 
     private MoneyOverlay moneyOverlay;
     private MissionTakeDownFile missionTakedownFile;
+    private DetonatorOverlay detonatorOverlay;
+
     private PlayerCharacter player;
     private InteractionHint phoneInteractionHint;
     private InteractionHint computerInteractionHint;
     private InteractionHint doorInteractionHint;
     private InteractionHint fridgeInteractionHint;
+    private InteractionHint bedInteractionHint;
 
     public SpawnScene(GameEngine engine) {
         this.engine = engine;
@@ -72,14 +78,28 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
 
     private void initGameObjects() { //Order matters! -> the top on is on top (huh!?)
         initMissionTakedownFile();
+        initDetonatorOverlay();
         initQuestOverlay();
         initMoneyOverlay();
         initInventoryOverlay();
+        initBedInteractionHint();
         initFridgeInteractionHint();
         initDoorInteractionHint();
         initComputerInteractionHint();
         initPhoneInteractionHint();
         initPlayer();
+    }
+
+    private void initDetonatorOverlay() {
+        detonatorOverlay = new DetonatorOverlay(engine);
+        detonatorOverlay.setVisible(engine.getStateManager().getState().getId() >= GameState.PLACED_BOMB.getId());
+        add(detonatorOverlay);
+    }
+
+    private void initBedInteractionHint() {
+        bedInteractionHint = new InteractionHint("Bett" +" (" + KeyEvent.getKeyText(engine.getKeyMappingSettings().INTERACT) + ")");
+        bedInteractionHint.setVisible(false);
+        add(bedInteractionHint);
     }
 
     private void initFridgeInteractionHint() {
@@ -151,7 +171,27 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
         missionRefuseTick();
         computerTick(player.getRGBOnBlockArea() == Color.BLUE.getRGB());
         fridgeTick(player.getRGBOnBlockArea() == new Color(255,0,255).getRGB());
+        bedTick(player.getRGBOnBlockArea() == new Color(0,255,255).getRGB());
         boughtSulfuricAcidTick();
+    }
+
+    private void bedTick(boolean isPlayerNearby) {
+        boolean intHint = false;
+
+        if (engine.getStateManager().getState() == GameState.GO_TO_REST) {
+            if (isPlayerNearby) {
+                intHint = true;
+                if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+                    engine.getStateManager().setState(GameState.RESTED);
+                    engine.getStateManager().setQuest(QuestState.NO_QUEST);
+                    engine.getGraphics().switchToScene(new SpawnScene(engine), new BlackFade(engine, 4000, () -> {
+                        engine.getStateManager().setQuest(QuestState.PLACE_BOMB);
+                    }));
+                }
+            }
+        }
+
+        bedInteractionHint.setVisible(intHint);
     }
 
     private int fridgeColaCooldown;
@@ -177,6 +217,7 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
                     if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
                         //Drink Cola
                         spawnBackground = SpawnSceneResource.BACKGROUND;
+                        repaint();
                         engine.getInventoryManager().addItem(new Item(Item.Type.ColaEmpty));
                         engine.getStateManager().setState(GameState.DRANK_COLA);
                         engine.getStateManager().setQuest(QuestState.NO_QUEST);
@@ -186,6 +227,33 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
                             engine.getDialogManager().setDialog(dialog);
                             engine.getStateManager().setState(GameState.REMEMBER_FOG_FLUID);
                         }).play();
+                    }
+                }
+            }
+        }else if (engine.getStateManager().getState() == GameState.DRINK_COLA && isPlayerNearby) {
+            intHint = true;
+            if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+                if (spawnBackground != SpawnSceneResource.BACKGROUND_FRIDGE) {
+                    spawnBackground = SpawnSceneResource.BACKGROUND_FRIDGE;
+                    repaint();
+                    fridgeColaCooldown = (int) (engine.getTickProvider().getTicksPerSecond() * 0.5f);
+                    SpawnSceneResource.FRIDGE.create().play();
+                }
+            }
+
+            if (spawnBackground == SpawnSceneResource.BACKGROUND_FRIDGE) {
+                if (fridgeColaCooldown > 0) {
+                    intHint = false;
+                    fridgeColaCooldown--;
+                }else {
+                    if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+                        //Drink Cola
+                        spawnBackground = SpawnSceneResource.BACKGROUND;
+                        repaint();
+                        engine.getInventoryManager().addItem(new Item(Item.Type.ColaEmpty));
+                        engine.getStateManager().setState(GameState.GO_TO_REST);
+                        engine.getStateManager().setQuest(QuestState.GO_TO_REST);
+                        SpawnSceneResource.COLA_DRINK.create().play();
                     }
                 }
             }
@@ -288,17 +356,32 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
             }
         }
 
+        if (engine.getStateManager().getState() == GameState.RESTED && isPlayerNearby) {
+            intHint = true;
+            if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+                //GOTO Headquarter
+                engine.getGraphics().switchToScene(new TravelScene(engine, true, 5, () -> {
+                    engine.getGraphics().switchToScene(new HeadquarterScene(engine), new BlackFade(engine));
+                }), new BlackFade(engine));
+            }
+        }
+
         doorInteractionHint.setVisible(isPlayerNearby && intHint);
     }
 
     private int introductionPhoneCallCooldown = 0;
     private GameAudioResource.Instance currentCallAudio;
     private void phoneTick(boolean isPlayerNearby) {
+        boolean intHint = false;
 
         if (isPlayerNearby && currentCallAudio != null && currentCallAudio.isActive()) {
-            phoneInteractionHint.setVisible(true);
+            intHint = true;
         }else {
-            phoneInteractionHint.setVisible(false);
+            intHint = false;
+
+            if (engine.getStateManager().getState() == GameState.CALL_G && isPlayerNearby) {
+                intHint = true;
+            }
         }
 
         if (engine.getStateManager().getState() == GameState.GAME_ENTRY && introductionPhoneCallCooldown <= 0) {
@@ -328,6 +411,20 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
                 engine.getDialogManager().setDialog(callDialog);
             });
         }
+
+        if (isPlayerNearby && engine.getStateManager().getState() == GameState.CALL_G && engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+            engine.getStateManager().setState(GameState.CALLING_G);
+            engine.getStateManager().setQuest(QuestState.NO_QUEST);
+            player.setMoveable(false);
+            player.setFlipPlayerImage(false);
+            //TODO first phone call sound
+            SwingUtilities.invokeLater(() -> {
+                FinalDialog finalDialog = new FinalDialog(engine, this);
+                engine.getDialogManager().setDialog(finalDialog);
+            });
+        }
+
+        phoneInteractionHint.setVisible(intHint);
     }
 
     private int missionRefuseDoorKnockCooldown;
@@ -447,5 +544,9 @@ public class SpawnScene extends AbstractScene implements ScalingEvent, GameTick 
 
     public MoneyOverlay getMoneyOverlay() {
         return moneyOverlay;
+    }
+
+    public DetonatorOverlay getDetonatorOverlay() {
+        return detonatorOverlay;
     }
 }

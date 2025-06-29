@@ -23,14 +23,24 @@ public class BlackFade extends AbstractFade {
     private Timer timer;
     private boolean increment;
 
+    private final float increments;
+
+    private Runnable callback = null;
+
     public BlackFade(GameEngine engine) {
+        this(engine, 800);
+    }
+
+    public BlackFade(GameEngine engine, int fadeTimeInMS) {
         this.engine = engine;
         setOpaque(false);
 
-        //OLD
-        //addMouseListener(new MouseAdapter() {});
-        //addMouseMotionListener(new MouseMotionAdapter() {});
-        //setFocusTraversalKeysEnabled(false);
+        increments = (float) 20 / ((float) fadeTimeInMS / 2);
+    }
+
+    public BlackFade(GameEngine engine, int fadeTimeInMS, Runnable callback) {
+        this(engine, fadeTimeInMS);
+        this.callback = callback;
     }
 
     @Override
@@ -51,7 +61,7 @@ public class BlackFade extends AbstractFade {
         engine.getGameKeyHandler().setInputEnabled(false);
 
         timer = new Timer(20, e -> {
-            alpha += increment ? 0.05f : -0.05f;
+            alpha += increment ? increments : -increments;
             if (alpha >= 1f) {
                 alpha = 1f;
                 increment = false;
@@ -62,6 +72,9 @@ public class BlackFade extends AbstractFade {
                 graphics.removeLayer(this);
                 //Enable inputs
                 engine.getGameKeyHandler().setInputEnabled(true);
+                if (callback != null) {
+                    callback.run();
+                }
             }
             repaint();
         });

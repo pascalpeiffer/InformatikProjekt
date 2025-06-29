@@ -52,7 +52,18 @@ public enum GameState {
 
     GET_NITRATOR(45),
     PLACE_NITRATOR(46),
-    PLACED_NITRATOR(47);
+    PLACED_NITRATOR(47),
+
+    CREATED_NITRO_GLYCERIN(48),
+    CREATED_NITRO_GLYCERIN_DIALOG(49),
+    DRINK_COLA(50),
+    GO_TO_REST(51),
+    RESTED(52),
+    PLACED_BOMB(53),
+
+    BOMB_EXPLODED(54),
+    CALL_G(55),
+    CALLING_G(56);
 
     private final int id;
 

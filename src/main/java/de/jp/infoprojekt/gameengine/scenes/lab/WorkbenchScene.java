@@ -56,7 +56,7 @@ public class WorkbenchScene extends AbstractScene implements ScalingEvent, GameT
     }
 
     private void initNitratorOverlay() {
-        nitratorOverlay = new NitratorOverlay(engine);
+        nitratorOverlay = new NitratorOverlay(engine, this);
         nitratorOverlay.setVisible(false);
         add(nitratorOverlay);
     }
@@ -150,6 +150,7 @@ public class WorkbenchScene extends AbstractScene implements ScalingEvent, GameT
             nitrator.setVisible(true);
             nitratorOverlay.setVisible(true);
             engine.getTickProvider().registerTick(nitratorOverlay);
+            engine.getTickProvider().registerTick(nitrator);
         }
         repaint();
     }
@@ -184,10 +185,15 @@ public class WorkbenchScene extends AbstractScene implements ScalingEvent, GameT
         engine.getTickProvider().unregisterTick(acidGenDevice);
         engine.getTickProvider().unregisterTick(electrolysisDevice);
         engine.getTickProvider().unregisterTick(nitratorOverlay);
+        engine.getTickProvider().unregisterTick(nitrator);
     }
 
     @Override
     public void scale(float widthMultiply, float heightMultiply) {
         repaint();
+    }
+
+    public Nitrator getNitrator() {
+        return nitrator;
     }
 }

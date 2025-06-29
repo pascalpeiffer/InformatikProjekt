@@ -4,6 +4,7 @@ import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.dialog.lab.AllIngredientsDialog;
 import de.jp.infoprojekt.gameengine.dialog.lab.EnoughMoneyForSulfuricAcidDialog;
 import de.jp.infoprojekt.gameengine.dialog.lab.NitratorDialog;
+import de.jp.infoprojekt.gameengine.dialog.lab.NitroglycerinInColaDialog;
 import de.jp.infoprojekt.gameengine.gameobjects.interaction.InteractionHint;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.InventoryOverlay;
 import de.jp.infoprojekt.gameengine.gameobjects.overlay.MoneyOverlay;
@@ -97,6 +98,10 @@ public class LabScene extends AbstractScene implements ScalingEvent, GameTick {
             AllIngredientsDialog dialog = new AllIngredientsDialog(engine, this);
             engine.getDialogManager().setDialog(dialog);
             engine.getStateManager().setState(GameState.GET_NITRATOR);
+        }else if (engine.getStateManager().getState() == GameState.CREATED_NITRO_GLYCERIN) {
+            NitroglycerinInColaDialog dialog = new NitroglycerinInColaDialog(engine, this);
+            engine.getDialogManager().setDialog(dialog);
+            engine.getStateManager().setState(GameState.CREATED_NITRO_GLYCERIN_DIALOG);
         }
     }
 
@@ -105,6 +110,12 @@ public class LabScene extends AbstractScene implements ScalingEvent, GameTick {
 
         if (playerNearby) {
             if (engine.getStateManager().getState() == GameState.BUY_SULFURIC_ACID) {
+                intHint = true;
+                if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
+                    //GOTO SPAWN
+                    engine.getGraphics().switchToScene(new SpawnScene(engine), new BlackFade(engine));
+                }
+            }else if (engine.getStateManager().getState() == GameState.DRINK_COLA) {
                 intHint = true;
                 if (engine.getGameKeyHandler().isKeyDown(engine.getKeyMappingSettings().INTERACT)) {
                     //GOTO SPAWN

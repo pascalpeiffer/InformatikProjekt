@@ -36,12 +36,14 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
     private boolean flipPlayerImage = false;
     private float playerScalingConstant = 1;
 
+    private float scaling = 1;
+
 
     private GameAudioResource playerSteppingSound;
 
     public PlayerCharacter(GameEngine engine) {
         this.engine = engine;
-        setSize(gameResource.getWidth(), gameResource.getHeight());
+        updateSize();
     }
 
     private int lastMoveTick = 0;
@@ -192,10 +194,10 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        int x = flipPlayerImage ? gameResource.getWidth() : 0;
+        int x = 0;
         int y = 0;
-        int width = flipPlayerImage ? -gameResource.getWidth() : gameResource.getWidth();
-        int height = gameResource.getHeight();
+        int width = (int) (flipPlayerImage ? -gameResource.getWidth() * scaling : gameResource.getWidth() * scaling);
+        int height = (int) (gameResource.getHeight() * scaling);
 
         //Player Size Scaling
         float scale = getRelativeY();
@@ -205,18 +207,22 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
         y = height - newHeight;
         height = newHeight;
 
+        x += (getWidth() + -width) / 2;
+
         g.drawImage(gameResource.getResource(), x, y, width, height, null);
 
-        //g.setColor(Color.GREEN);
-        //g.fillRect(getWidth() / 2 - 1, getHeight() - 3, 2, 2);
     }
 
     @Override
     public void scale(float widthMultiply, float heightMultiply) {
         if (gameResource != null) {
-            setSize(gameResource.getWidth(), gameResource.getHeight());
+            updateSize();
         }
         super.scale(widthMultiply, heightMultiply);
+    }
+
+    private void updateSize() {
+        setSize((int) (gameResource.getWidth() * scaling), (int) (gameResource.getHeight() * scaling));
     }
 
     public void setPlayerSteppingSound(GameAudioResource playerSteppingSound) {
@@ -225,5 +231,15 @@ public class PlayerCharacter extends AbstractGameObject implements ScalingEvent,
 
     public void setPlayerScalingConstant(float playerScalingConstant) {
         this.playerScalingConstant = playerScalingConstant;
+    }
+
+    public void setScaling(float scaling) {
+        this.scaling = scaling;
+        updateSize();
+        repaint();
+    }
+
+    public float getScaling() {
+        return scaling;
     }
 }

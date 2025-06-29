@@ -12,14 +12,16 @@ public class Nitrator extends AbstractGameObject implements GameTick {
 
     private final GameResource nitrator = ItemResource.Nitrator;
 
-    final int moveTicks;
+    private final int moveTicks;
+
+    private boolean moving = false;
 
     public Nitrator(GameEngine engine) {
         update();
         moveTicks = (int) (engine.getTickProvider().getTicksPerSecond() * 0.05);
     }
 
-    boolean move = false;
+    private boolean move = false;
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -27,9 +29,13 @@ public class Nitrator extends AbstractGameObject implements GameTick {
         g.drawImage(nitrator.getResource(), move ? 1 : 0, 0, getWidth(), getHeight(), null);
     }
 
-    int moveTicksLeft = 0;
+    private int moveTicksLeft = 0;
     @Override
     public void tick(long currentTick) {
+        if (!moving) {
+            return;
+        }
+
         if (moveTicksLeft > 0) {
             moveTicksLeft--;
         }else {
@@ -50,4 +56,11 @@ public class Nitrator extends AbstractGameObject implements GameTick {
         repaint();
     }
 
+    public boolean isMoving() {
+        return moving;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
 }

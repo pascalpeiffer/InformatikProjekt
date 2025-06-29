@@ -29,6 +29,6 @@ public class LabSceneResource {
     public static final GameAudioResource PICKING_UP_OBJECT = new GameAudioResource("/scenes/lab/PickingUpObject.wav");
     public static final GameAudioResource PLACING_OBJECT_TABLE = new GameAudioResource("/scenes/lab/PlacingObjectTable.wav");
     public static final GameAudioResource PLAYER_STEPPING = new GameAudioResource("/scenes/lab/SteppingLaboratory.wav", 0.15f);
-    public static final GameAudioResource DROP = new GameAudioResource("/scenes/lab/Drop.wav", 0.15f);
+    public static final GameAudioResource DROP = new GameAudioResource("/scenes/lab/Drop.wav", 0.5f);
 
 }

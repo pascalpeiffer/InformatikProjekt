@@ -15,6 +15,8 @@ public class PlayerResource {
 
     public static GameResource MONEY_ICON = new GameResource("/player/MoneyIcon.png", 0.075f);
 
+    public static GameResource DETONATOR = new GameResource("/player/Detonator.png", 0.4f);
+
     public static GameResource INVENTORY_FRAME = new GameResource("/player/InventoryFrame.png", 0.08f);
 
 }

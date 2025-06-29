@@ -2,7 +2,11 @@ package de.jp.infoprojekt.gameengine.gameobjects.overlay;
 
 import de.jp.infoprojekt.gameengine.GameEngine;
 import de.jp.infoprojekt.gameengine.gameobjects.AbstractGameObject;
+import de.jp.infoprojekt.gameengine.graphics.fade.BlackFade;
 import de.jp.infoprojekt.gameengine.graphics.render.TextRenderer;
+import de.jp.infoprojekt.gameengine.scenes.lab.LabScene;
+import de.jp.infoprojekt.gameengine.scenes.lab.WorkbenchScene;
+import de.jp.infoprojekt.gameengine.state.GameState;
 import de.jp.infoprojekt.gameengine.tick.GameTick;
 import de.jp.infoprojekt.resources.ResourceManager;
 import de.jp.infoprojekt.resources.scenes.LabSceneResource;
@@ -17,6 +21,7 @@ import java.awt.event.MouseEvent;
 public class NitratorOverlay extends AbstractGameObject implements GameTick {
 
     private final GameEngine engine;
+    private final WorkbenchScene workbenchScene;
 
     private final FloatRectangle arrowDown = new FloatRectangle(0.05f, 0.72f, 0.08f, 0.13f);
     private final FloatRectangle arrowUp = new FloatRectangle(0.26f, 0.72f, 0.08f, 0.13f);
@@ -24,12 +29,15 @@ public class NitratorOverlay extends AbstractGameObject implements GameTick {
 
     private Font font = FontManager.JERSEY_10;
 
-    private float dropRate;
+    private int dropRate; //Pro 100 MS
 
     private int temp = 18;
 
-    public NitratorOverlay(GameEngine engine) {
+    private int dropsLeft = 40;
+
+    public NitratorOverlay(GameEngine engine, WorkbenchScene workbenchScene) {
         this.engine = engine;
+        this.workbenchScene = workbenchScene;
         setDisableLocationFix(true);
         setRelativeLocation(new FloatPoint(0f, 0f));
         updateSize();
@@ -50,13 +58,15 @@ public class NitratorOverlay extends AbstractGameObject implements GameTick {
 
     private void onMouseClick(FloatPoint mouseHit) {
         if (arrowDown.contains(mouseHit)) {
-            dropRate -= 0.2f;
+            if (dropsLeft <= 0) return;
+            dropRate -= 2;
             if (dropRate < 0) {
                 dropRate = 0;
             }
             repaint();
         }else if (arrowUp.contains(mouseHit)) {
-            dropRate += 0.2f;
+            if (dropsLeft <= 0) return;
+            dropRate += 2;
             repaint();
         }else if (cooling.contains(mouseHit)) {
             temp = Math.max(18, temp-1);
@@ -67,14 +77,38 @@ public class NitratorOverlay extends AbstractGameObject implements GameTick {
     private long lastDrop;
     @Override
     public void tick(long currentTick) {
-        if (dropRate != 0 && lastDrop + (engine.getTickProvider().getTicksPerSecond() / dropRate) <= currentTick) {
+
+        if (engine.getStateManager().getState() != GameState.PLACED_NITRATOR) {
+            return;
+        }
+
+        if (dropRate != 0 && lastDrop + ((float) engine.getTickProvider().getTicksPerSecond() * 10 / dropRate) <= currentTick) {
             lastDrop = currentTick;
 
-            temp += 2;
-            repaint();
             //Drop
+            dropsLeft--;
+            temp += 1;
+            repaint();
             LabSceneResource.DROP.create().play();
         }
+
+        if (dropRate != 0) {
+            workbenchScene.getNitrator().setMoving(true);
+        }else {
+            workbenchScene.getNitrator().setMoving(false);
+        }
+
+        System.out.println(dropsLeft);
+
+        if (dropsLeft <= 0) {
+            dropRate = 0;
+            repaint();
+            engine.getStateManager().setState(GameState.CREATED_NITRO_GLYCERIN);
+            LabSceneResource.DONE_DING.create().onEnd(() -> {
+                engine.getGraphics().switchToScene(new LabScene(engine), new BlackFade(engine));
+            }).play();
+        }
+
     }
 
     @Override
@@ -92,7 +126,7 @@ public class NitratorOverlay extends AbstractGameObject implements GameTick {
         String tempString = temp + "°";
         TextRenderer.drawFormattedString(g, tempString, getWidth() / 2 - getFontMatrics().stringWidth(tempString) / 2 - (LabSceneResource.TEMP_GAUGE.getWidth() / 9), (int) (ResourceManager.getGameScreenHeight() * 0.834f) - getFontMatrics().getDescent(), 10000, 10000, getFont(), Integer.MAX_VALUE);
 
-        String dropRateString = Float.toString(dropRate);
+        String dropRateString = Float.toString((float) dropRate / 10);
         TextRenderer.drawFormattedString(g, dropRateString, getWidth() / 4 - (LabSceneResource.EMPTY_TEMPLATE.getWidth() / 2) - getFontMatrics().stringWidth(dropRateString) / 2, (int) (ResourceManager.getGameScreenHeight() * 0.834f) - getFontMatrics().getDescent(), 10000, 10000, getFont(), Integer.MAX_VALUE);
 
         String description = "Tropfen pro Sekunde";

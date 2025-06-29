@@ -33,5 +33,7 @@ public class SpawnSceneResource {
 
     public static GameAudioResource FRIDGE = new GameAudioResource("/scenes/spawn/FridgeOpening.wav", 2f);
 
+    public static GameAudioResource BOMB_EXPLODE = new GameAudioResource("/scenes/spawn/BombExplosion.wav", 2f);
+
 
 }

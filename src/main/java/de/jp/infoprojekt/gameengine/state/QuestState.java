@@ -26,7 +26,14 @@ public enum QuestState {
     GET_DESTILLATION_DEVICE("Finde die Destille und Platziere sie auf der Werkbank"),
     PLACE_DESTILLATION_DEVICE("Destille Platzieren und Nebelfluid reingießen"),
     GET_NITRATOR("Finde den Nitrator und platziere ihn auf der Werkbank"),
-    PLACE_NITRATOR("Plaziere den Nitrator auf der Werkbank");
+    PLACE_NITRATOR("Plaziere den Nitrator auf der Werkbank"),
+
+    DRINK_COLA("Trinke noch eine Cola und lege dich hin"),
+    GO_TO_REST("Lege dich hin"),
+
+    PLACE_BOMB("Fahre zur Führungsstelle und platziere die Bombe"),
+    DETONATE_BOMB("Zünde die Bombe"),
+    CALL_G("Rufe den Boss an");
 
     private final String questText;
 
